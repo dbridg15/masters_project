@@ -27,7 +27,7 @@
 
 \begin{document}
 	
-	\section*{N-dimensional hypervolumes to study stability of complex ecosystems \citep{Barros2016} - \underline{\textit{Read in detail!}}}
+	\section*{N-dimensional hypervolumes to study stability of complex ecosystems \citep{Barros2016} - \textit{Read in detail!}}
 	
 	Although our knowledge on the stabilising role of biodiversity and on how it is affected by perturbations has greatly improved, we still lack a comprehensive view on ecosystem stability that is transversal to different habitats and perturbations. Hence, we propose a framework that takes advantage of the multiplicity of components of an ecosystem and their contribution to stability. Ecosystem components can range from species or functional groups, to different functional traits, or even the cover of different habitats in a landscape mosaic. We make use of n-dimensional hypervolumes to define ecosystem states and assess how much they shift after environmental changes have occurred. We demonstrate the value of this framework with a study case on the effects of environmental change on Alpine ecosystems. Our results highlight the importance of a multidimensional approach when studying ecosystem stability and show that our framework is flexible enough to be applied to different types of ecosystem components, which can have impor- tant implications for the study of ecosystem stability and transient dynamics.
 	
@@ -170,7 +170,9 @@
 		\end{itemize}
 	\end{itemize}
 	
-	\section*{Predicting ecosystem stability from community composition and biodiversity \citep{DeMazancourt2013} - \underline{\textit{Something}}}
+	\section*{Predicting ecosystem stability from community composition and biodiversity \citep{DeMazancourt2013} - \textit{Intro and Discussion}}
+	Second, is it really useful to lump together everyone born between 1984 and 1993 into one group? I was born in 1989 (yes, yes, I am peak millennial, I came out of the womb holding an avocado trying to get a discount on a train ticket). I tried to talk to a colleague born in 1993 recently about Snapchat, and before she finished explaining how the new update had ruined the “story” function, my bones had turned to dust like the Nazi in Indiana Jones and the Last Crusade. I don’t necessarily feel a sense of “millennial solidarity”, except when millennials are being attacked by tabloids for being too sensitive (ie showing a level of compassion for people who don’t look like them).
+	
 	
 	As biodiversity is declining at an unprecedented rate, an important current scientific challenge is to understand and predict the consequences of biodiversity loss. Here, we develop a theory that predicts the temporal variability of community biomass from the properties of individual component species in monoculture. Our theory shows that biodiversity stabilises ecosystems through three main mechanisms: (1) asynchrony in species’ responses to environmental fluctuations, (2) reduced demographic stochasticity due to overyielding in species mixtures and (3) reduced observation error (including spatial and sampling variability). Parameterised with empirical data from four long-term grassland biodiversity experiments, our prediction explained 22–75\% of the observed variability, and captured much of the effect of species richness. Richness stabilised communities mainly by increasing community biomass and reducing the strength of demographic stochasticity. Our approach calls for a re-evaluation of the mechanisms explaining the effects of biodiversity on ecosystem stability.
 	
@@ -184,10 +186,85 @@
 		\item A number of theories have been developed to explain diversities stabilising effect on aggregate ecosystem properties.
 		\begin{enumerate}
 			\item Statistical approach based on phenomenological relationships
-			\item  
+			\item A stochastic approach describing population dynamics but not specifically species interactions
+			\item A general population dynamical approach
+			\item Specific models of interspecific competition 
 		\end{enumerate}
+		\item these all kinda describe whats going on but not a mechanism! $\Rightarrow$ This is still contentious
+		\item These are not able to predict ecosystem stability from the properties of component species
+		\item This study comes up with a new theory to do just that...
+		\end{itemize}
+	\underline{Theoretical Model}
+	\begin{itemize}
+		\item Discrete-time version of Lotka-Volterra model incorporating environmental and demographic stochasticity
+		\item Description of model (not really important for me)
+		\item Lots of maths and results...  
+	\end{itemize}
+	\underline{Discussion}
+	\begin{itemize}
+		\item Their model explained 22-75\% variance in the aboveground community biomass in 4 long-term experiments
+		\item Summed species covariances are unlikely to provide a mechanistic explanation for community stability
+		\item Asynchrony of species environmental responses is the basic mechanism of the 'insurance hypothesis'
+		\item Their model also shows these. Asynchronous species responses $\Rightarrow$ Greater community stability
+		\item Reduced demographic stochasticity $\Rightarrow$ increased community biomass
+		\begin{itemize}
+			\item Species richness increases community biomass, though complimentary species or selection of more productive species $\Rightarrow$ known as overyielding
+			\item Their study when tested on empirical data showed this was happening...
+		\end{itemize}
+		\item Effect of diversity on ecosystem stability through reduced observation errors
+		\begin{itemize}
+			\item If species biomasses are measured individually, the higher the diversity the more the error will even out across the whole community biomass...
+			\item Common species weigh more on the variability than rare species.
+			\item Maybe this is just a methodological problem?
+			\item all this stuff is based on experiments in monocultures...
+		\end{itemize}
+	\end{itemize}
+
+	
+	\section*{Network spandrels reflect ecological assembly \citep{Maynard2018} - \textit{Intro  and Discussion}}
+	
+	Ecological networks that exhibit stable dynamics should theoretically persist longer than those that fluctuate wildly. Thus, network structures which are over-represented in natural systems are often hypothesised to be either a cause or consequence of ecological stability. Rarely considered, however, is that these network structures can also be by-products of the processes that determine how new species attempt to join the community. Using a simulation approach in tandem with key results from random matrix theory, we illustrate how historical assembly mechanisms alter the structure of ecological networks. We demonstrate that different community assembly scenarios can lead to the emergence of structures that are often interpreted as evidence of 'selection for stability'. However, by controlling for the underlying selection pressures, we show that these assembly artefacts or spandrels are completely unrelated to stability or selection, and are instead by-products of how new species are introduced into the system. We propose that these network-assembly spandrels are critically overlooked aspects of network theory and stability analysis, and we illustrate how a failure to adequately account for historical assembly can lead to incorrect inference about the causes and consequences of ecological stability.
+	
+	\underline{Introduction}
+	\begin{itemize}
+		\item Ecological networks tend to be strikingly non-random
+		\begin{itemize}
+			\item It is hypothesised that this occurs because selection 'prunes' unstable configurations, resulting in stable patterns
+			\item for example wildly fluctuating networks would not be expected to persist through time die to stochastic extinctions
+		\end{itemize}
+		\item but it could be that these structures are just 'artefacts of assembly' with no inherent connection to stability
+		\item Assembly of biological systems is dictated by two forces
+		\begin{enumerate}
+			\item How, when and why variation is introduced into a system.
+			\item Selective mechanisms which determine what features persist at what frequencies. 
+		\end{enumerate}
+		\item While selection is a dominant force we must not forget assembly constraints!
+		\begin{itemize}
+			\item It is possible for features which appear to have current utility to have been occurred as a by-product of the way the system was formed and have no adaptive origin.
+			\item dubbed the 'network spandrel' - a nod to cathedral archways which appear to have been selected but are in fact a by-product of construction.
+		\end{itemize}
+		\item A 'network spandrel' refers to any network property which emerges as a by-product of how the species joins the community.
+		\item Disentangling whether an empirical pattern has emerged due to assembly constraints or selection is very difficult. Requires experimental, observational and theoretical evidence.
+	\end{itemize}
+
+	\underline{Assembling Ecological Communities}
+	\begin{itemize}
+		\item Again they use the Lokta-Volterra model.
+		\item They set the parameters to reach a steady state
+		\item After each equilibrium is reached they add a new species to the simulated community, then run to equilibrium again. This new species may or may not establish, and may or may not lead to one or more extinctions of other species.
+		\item some stuff about methods, summarised well in fig1.
+		\item lots of results which are interesting but difficult to summarise
 	\end{itemize}
 	
+	\underline{Discussion}
+	\begin{itemize}
+		\item Biological systems are not only the result of selection! But also how variation is introduced into systems!
+		\item This study shows that different assembly processes leave different fingerprints on the resulting network giving the appearance of different selective pressures.
+		\item Spandrels reflect the historic processes which shap	ed a system (while not specifically saying anything about selection)
+		\item not accounting for spandrels leads to incorrect inferences about selection and stability.
+	\end{itemize}
+
+	\section*{New Approaches for delineating n-dimensional hypervolumes \citep{Blonder2018}}
 	
 	
 	\bibliographystyle{agsm}
