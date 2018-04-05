@@ -93,6 +93,13 @@ census_2 = census_2.dropna(subset = impt_cols, how = 'all')
 census_3 = census_3.dropna(subset = impt_cols, how = 'all')
 census_4 = census_4.dropna(subset = impt_cols, how = 'all')
 
+# delete dead trees (alive == 0)
+census_1 = census_1[census_1.alive == 1]
+census_2 = census_2[census_2.alive == 1]
+census_3 = census_3[census_3.alive == 1]
+census_4 = census_4[census_4.alive == 1]
+
+
 # recombine all census data (stack on top of each other)
 frames = [census_1, census_2, census_3, census_4]
 
