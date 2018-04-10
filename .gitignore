@@ -10,4 +10,5 @@
 *.log
 *.synctex.gz
 .ropeproject/*
+Code/.ropeproject/*
 *.pdf

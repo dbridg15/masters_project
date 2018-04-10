@@ -9,10 +9,9 @@ __author__ = 'David Bridgwood (dmb2417@ic.ac.uk)'
 
 # imports
 import pandas as pd
+import numpy as np
 
 # TODO
-    # not all dead trees are blanks, do i want to include them if i know their
-    # ID?
 
 ################################################################################
 #
@@ -105,5 +104,50 @@ frames = [census_1, census_2, census_3, census_4]
 
 df = pd.concat(frames)
 
+# add genus column
+df['genus']  = df.apply(lambda row: row.binomial.split(" ")[0], axis = 1)
+
 # save to csv
 df.to_csv("../Results/trees_sorted.csv", index = False)
+
+
+################################################################################
+# calculating subplot level summaries for axis
+################################################################################
+
+# simpsons diversity index
+def simpsonsdiv(df):
+    spccounts = df.groupby(['binomial']).apply(lambda x: len(x))
+    numarator = np.nansum(spccounts*(spccounts - 1))
+    denominator = len(df)*(len(df) - 1)
+    return  1 - (numarator/denominator)
+
+# summary stats for each subplot...
+def sumstats(group):
+    avghgt = np.mean(group.height)                  # average height
+    tbiomc = np.sum(group.stem_C + group.root_C)    # total biomass
+    simpdv = simpsonsdiv(group)                     # simpsons diversity
+    return avghgt, tbiomc, simpdv
+
+spsum = df.groupby(['plot', 'subplot', 'census']).apply(sumstats).reset_index()
+
+# add f_type in
+spsum = spsum.merge(df[["f_type", "plot"]].drop_duplicates(), how = 'left', on = 'plot')
+
+# split up the statistics to individual columnes
+spsum['avghgt'] = spsum.apply(lambda x: x[0][0], axis = 1)
+spsum['tbiomc'] = spsum.apply(lambda x: x[0][1], axis = 1)
+spsum['simpdv'] = spsum.apply(lambda x: x[0][2], axis = 1)
+
+spsum.simpdv = spsum.simpdv.fillna(0)               # replace Nan simpsons with 0
+
+spsum = spsum.drop([0], axis = 1)                   # drop to useless column
+
+spsum['avghgtnorm'] =  ((spsum['avghgt'] - min(spsum['avghgt']))/
+                        (max(spsum['avghgt'] - min(spsum['avghgt']))))
+
+spsum['tbiomcnorm'] =  ((spsum['tbiomc'] - min(spsum['tbiomc']))/
+                        (max(spsum['tbiomc'] - min(spsum['tbiomc']))))
+
+
+spsum.to_csv("../Results/tree_axis.csv")            # save to csv
