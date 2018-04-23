@@ -266,6 +266,46 @@
 
 	\section*{New Approaches for delineating n-dimensional hypervolumes \citep{Blonder2018}}
 	
+	\begin{enumerate}
+		\item Hutchinson's n-dimensional hypervolume concept underlies many applications in contemporary ecology and evolutionary biology. Estimating hypervolumes from sampled data has been an ongoing challenge due to conceptual and computational issues.
+		\item We present new algorithms for delineating the boundaries and probability density within n-dimensional hypervolumes. The methods produce smooth boundaries that can fit data either more loosely (Gaussian kernel density estimation) or more tightly (one-classification via support vector machine). Further, the algorithms can accept abundance-weighted data, and the resulting hypervolumes can be given a probabilistic interpretation and projected into geographic space.
+		\item We demonstrate the properties of these methods on a large dataset that character- ises the functional traits and geographic distribution of thousands of plants. The methods are available in version $\geq$2.0.7 of the HYPERVOLUME R package.
+		\item These new algorithms provide: (i) a more robust approach for delineating the shape and density of n-dimensional hypervolumes; (ii) more efficient performance on large and high-dimensional datasets; and (iii) improved measures of functional diversity and environmental niche breadth.
+	\end{enumerate}
+
+	\underline{Introduction}
+	\begin{itemize}
+		\item Over the last decade there has been a number of studies using n-dimensional hypervolumes as a central concept
+		\item Assuming a system can be characterised by a set of independent axes, these axes would constitute a n-dimensional euclidean space.
+		\item Choosing how to delineate this n-dimensional space is a bit controversial. There has historically been differences when niche-data is used vs trait-data
+		\item All depends on the  goals of the analysis
+		\item Hypervolume R package uses a Monte Carlo approach. It can describe complex shapes, measure their volume and perform set operations	(to find distance, intersections etc).
+		\item This paper develops the hypervolume concept and better algorithms to delineate them.		
+	\end{itemize}
+
+	\underline{New Hypervolume construction methods}
+	\begin{itemize}
+		\item Two methods  
+		\begin{itemize}
+			\item Gaussian: this kernal decays towards zero in all directions, if you believe the data is an unbiased sample from a probability distribution then use this.
+			\item Support-vector-machine: provides a smooth fit around the data. Use this if you think the extremes of the data represent the true bounds.
+		\end{itemize}
+		\item When calculating hypervolumes the max number of dimensions $n$ should be no more than $\log{m}$ where m is the number of data points.
+		\item They use a hyperelliptical uniform sampling algorithm 
+	\end{itemize}
+
+	\underline{Other New Functionality}
+	\begin{itemize}
+		\item hypervolume\_general\_model, this effectively maps an n-dimensional hypervolume to on-dimensional Euclidean space.
+		\item Ability to weight data
+		\item Ability to create geographic maps for species distribution modelling
+	\end{itemize}
+
+	\underline{Demonstration Analysis}
+	\begin{itemize}
+		\item Functional trait analysis: Three trait values
+		\item Niche Analysis: Three climatic variables
+	\end{itemize}
 	
 	\bibliographystyle{agsm}
 	\bibliography{CMEE-APROJECT!}

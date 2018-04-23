@@ -105,7 +105,8 @@ frames = [census_1, census_2, census_3, census_4]
 df = pd.concat(frames)
 
 # add genus column
-df['genus']  = df.apply(lambda row: row.binomial.split(" ")[0], axis = 1)
+df['genus']    = df.apply(lambda row: row.binomial.split(" ")[0], axis = 1)
+df['subplotx'] = df['plot'] + df['subplot'].astype(str)
 
 # save to csv
 df.to_csv("../Results/trees_sorted.csv", index = False)
@@ -151,3 +152,13 @@ spsum['tbiomcnorm'] =  ((spsum['tbiomc'] - min(spsum['tbiomc']))/
 
 
 spsum.to_csv("../Results/tree_axis.csv")            # save to csv
+
+
+################################################################################
+# species matrix
+################################################################################
+
+species_plot_matrix = df.groupby(['subplotx', 'binomial']).size().unstack()
+
+species_plot_matrix.to_csv("../Results/trees_matrix.csv")
+

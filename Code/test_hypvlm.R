@@ -35,10 +35,35 @@ oldgrw <- df[which(df$f_type == 'Old-growth' & df$census == census), ]
 
 
 hv_logged <- hypervolume_gaussian(logged[, c("avghgtnorm", "tbiomcnorm", "simpdv")],
-                                  kde.bandwidth = bandwidth)
+                                  kde.bandwidth = bandwidth, name = "Logged")
 
 hv_oldgrw <- hypervolume_gaussian(oldgrw[, c("avghgtnorm", "tbiomcnorm", "simpdv")],
-                                  kde.bandwidth = bandwidth)
+                                  kde.bandwidth = bandwidth, name = "Oldgrw")
+
+
+# use hypervolume_svm when you think the extremes of the data represent the
+# true bounds
+hv_logged <- hypervolume_svm(logged[, c("avghgtnorm", "tbiomcnorm", "simpdv")],
+                             name = "Logged")
+
+hv_oldgrw <- hypervolume_svm(oldgrw[, c("avghgtnorm", "tbiomcnorm", "simpdv")],
+                             name = "Oldgrw")
+
+
+
+hypervolume_distance(hv_logged, hv_oldgrw)
+
+hvset <- hypervolume_set(hv_logged, hv_oldgrw, check.memory=F)
+
+hypervolume_overlap_statistics(hvset)
+get_volume(hvset)
+
+plot(hvset, show.3d=T, cex.centroid=15, cex.random=3, cex.data=5)
+
+# save 3d plot as a gif...
+# hypervolume_save_animated_gif(image.size = 400, axis = c(0, 0, 1), rpm = 4,
+#                               duration = 15, fps = 10, file.name = "movie",
+#                               directory.output = ".")
 
 
 ###############################################################################
@@ -62,24 +87,4 @@ cn3_hv <- hypervolume_gaussian(cn3[, c("avghgtnorm", "tbiomcnorm", "simpdv")],
                                kde.bandwidth = bandwidth)
 cn4_hv <- hypervolume_gaussian(cn4[, c("avghgtnorm", "tbiomcnorm", "simpdv")],
                                kde.bandwidth = bandwidth)
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
