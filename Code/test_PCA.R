@@ -43,9 +43,11 @@ tree_am <- rel_abnd(tree_df)
 
 # NMDS on relative abundance matrix
 # ***NOT SURE THIS IS RIGHT AS NOW THE DIFFERENT CENSUS' ARE NOT COMPARABLE***
-count_mds <- metaMDS(tree_cm, k = 3, trymax = 100)
+# count_mds <- metaMDS(tree_cm, k = 3, trymax = 100)
+# relab_mds <- metaMDS(tree_am, k = 3, trymax = 100)
+# save(count_mds, relab_mds, file = "../Results/mds_out.Rdata")
 
-relab_mds <- metaMDS(tree_am, k = 3, trymax = 100)
+load("../Results/mds_out.Rdata")
 
 # function to compare two hypervolumes from different census' for same plot
 compare_census <- function(mds, c1_str, c2_str, plot_str){
