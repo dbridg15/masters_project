@@ -13,3 +13,5 @@ Used to work out absences from the presences in family_list.csv. Column 1 = trap
 Cheers
 
 
+DB:
+** Rows 25003 - 25015 had dates as 31/06/2012 (not a real date). As row 25002 had date 31/07/2012 I inferred that this was the correct date in these rows. (It doesnt impact the discrete sample preiods so wont impact final results.)
