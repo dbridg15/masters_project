@@ -40,10 +40,10 @@ beetle_cm <- count_matrix(beetle_df)
 
 
 ##** THIS TAKES FOREVER!! SORT IT SO ITS BETTER!! **##
-count_mds <- metaMDS(beetle_cm, k = 3, trymax = 100)
-# save(count_mds, relab_mds, file = "../Results/beetles_mds.Rdata")
+#count_mds <- metaMDS(beetle_cm, k = 3, trymax = 30)
+#save(count_mds, file = "../Results/beetles_mds.Rdata")
 
-#load("../Results/beetles_mds.Rdata")
+load("../Results/beetles_mds.Rdata")
 
 # function to compare two hypervolumes from different census' for same plot
 compare_census <- function(mds, c1_str, c2_str, plot_str){
