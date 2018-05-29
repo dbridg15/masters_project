@@ -51,8 +51,13 @@ compare_hypervolumes <- function(df, compare, type = "svm", plot = FALSE ){
   # empty list
   hvlist <- list()
 
+  cat("\n")
+
   # for each census make hv and append to list
   for (i in compare_list){
+
+    cat("\rBuilding Hypervolume ", which(compare_list == i), " of ", length(compare_list))
+
     if (compare == "census"){
       tmp_df <- subset(df, census == i, select = colnames(df)[!(colnames(df) %in% c("plot", "subplot", "census"))])
     } else if (compare == "plot"){
@@ -60,9 +65,9 @@ compare_hypervolumes <- function(df, compare, type = "svm", plot = FALSE ){
     }
     
     if (type == "svm"){
-      hv <- invisible(hypervolume_svm(tmp_df, name = i))
+      hv <- hypervolume_svm(tmp_df, name = i, verbose = F)
     } else if (type == "gaussian"){
-      hv <-  invisible(hypervolume_gaussian(tmp_df, name = i))
+      hv <- hypervolume_gaussian(tmp_df, name = i, verbose = F)
     } else {
       print("type must be 'svm' or 'gaussian'")
       return()
@@ -88,23 +93,33 @@ compare_hypervolumes <- function(df, compare, type = "svm", plot = FALSE ){
   union_matrix         <- blank_matrix
   unique_componant_row <- blank_matrix
 
-  # need to figure out how to make this more efficient!
+  # possible pairs...
+  pairs <- combn(compare_list, 2)
 
-  # distance between centroids
-  for (row in compare_list){
-    for (col in compare_list){
+  cat("\n\n")
 
-      set <- hypervolume_set(hvlist[[row]], hvlist[[col]], check.memory = F)
+  # compare all pairs
+  for (i in 1:ncol(pairs)){
 
-      distance_matrix[row, col]      <- hypervolume_distance(hvlist[[row]], hvlist[[col]])
-      jaccard_matrix[row, col]       <- hypervolume_overlap_statistics(
-                                        hypervolume_set(hvlist[[row]],
-                                                        hvlist[[col]], check.memory = F))[1]
-      intersection_matrix[row, col]  <- get_volume(set)[3] 
-      union_matrix[row, col]         <- get_volume(set)[4] 
-      unique_componant_row[row, col] <- get_volume(set)[5] 
-    }
+    cat("\rComparing Hypervolume pairs", i, " of ", ncol(pairs))
+
+    row <- pairs[1, i]
+    col <- pairs[2, i]
+
+    sink("temp.txt", append = TRUE)
+    set <- hypervolume_set(hvlist[[row]], hvlist[[col]], check.memory = F, verbose = F)
+
+    distance_matrix[row, col]      <- hypervolume_distance(hvlist[[row]], hvlist[[col]])
+    jaccard_matrix[row, col]       <- hypervolume_overlap_statistics(set)[1]
+    intersection_matrix[row, col]  <- get_volume(set)[3] 
+    union_matrix[row, col]         <- get_volume(set)[4] 
+    unique_componant_row[row, col] <- get_volume(set)[5]
+    unique_componant_row[col, row] <- get_volume(set)[6]
+    sink()
   }
+
+  file.remove("temp.txt")
+  cat("\n\n")
 
   comparison <- new("hv_comp",
                     name                 = nam_str,
@@ -114,7 +129,6 @@ compare_hypervolumes <- function(df, compare, type = "svm", plot = FALSE ){
                     intersection_matrix  = intersection_matrix,
                     union_matrix         = union_matrix,
                     unique_componant_row = unique_componant_row)
-
 
   if (plot == TRUE){
     plot(hvlist)

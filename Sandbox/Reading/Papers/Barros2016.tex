@@ -1,0 +1,142 @@
+\section*{N-dimensional hypervolumes to study stability of complex ecosystems \citep{Barros2016} - \textit{Read in detail!}}
+
+Although our knowledge on the stabilising role of biodiversity and on how it is affected by perturbations has greatly improved, we still lack a comprehensive view on ecosystem stability that is transversal to different habitats and perturbations. Hence, we propose a framework that takes advantage of the multiplicity of components of an ecosystem and their contribution to stability. Ecosystem components can range from species or functional groups, to different functional traits, or even the cover of different habitats in a landscape mosaic. We make use of n-dimensional hypervolumes to define ecosystem states and assess how much they shift after environmental changes have occurred. We demonstrate the value of this framework with a study case on the effects of environmental change on Alpine ecosystems. Our results highlight the importance of a multidimensional approach when studying ecosystem stability and show that our framework is flexible enough to be applied to different types of ecosystem components, which can have impor- tant implications for the study of ecosystem stability and transient dynamics.
+
+\underline{Introduction}
+\begin{itemize}
+	\item Ecosystem components range from species/functional groups through to habitat types and structure
+	\item Ecosystems are changing and we need to understand there responses
+	\item Stability is multifaceted...
+	\item Biodiversity-Ecosystem Functioning (BEF)
+	\begin{itemize}
+		\item Understanding how biodiversity maintains and promotes productivity
+	\end{itemize}
+	\item Fewer studies have looked at perturbation-biodiversity
+	\begin{itemize}
+		\item Functional diversity can change across environment /disturbance gradients
+		\item Relationship of ecosystem function and biodiversity
+	\end{itemize}
+	\item \textbf{Ecosystem stability is no easily summarised by a single metric}
+	\begin{itemize}
+		\item Using multiple components should provide better results...
+		\item Components often have temporal oscillations..
+		\begin{itemize}
+			\item In 2D these converge on a point...
+			\item in 3D (and n-dimensions) it becomes more complex $\Rightarrow$ N-Dimensional Hypervolumes!
+		\end{itemize}
+	\end{itemize}
+	\item N-Dimensional Hypervolumes
+\begin{itemize}
+	\item These oscillations become a trajectory in n-dimensional space
+	\item A cloud of points...
+	\item If conditions are disturbed than the trajectory will change $\Rightarrow$ new hypervolume
+	\item They can be used to test departure from a stable state
+	\item Also convergence on new stable state or return to old (i.e. different measure of stability can be tested)
+	\end{itemize} 
+	\item Choosing components (Choice of components depends on the kind of study)
+	\begin{itemize}
+		\item Stability of biodiversity at community scale
+		\begin{itemize}
+			\item Time series of species abundances
+			\item Community weighted means (CWMs) and varience (CWVs) of functional traits
+		\end{itemize}
+		\item Larger Scale
+		\begin{itemize}
+			\item Taxonomic functional traits
+			\item Phylogenetic diversity metrics
+		\end{itemize}
+		\item Ecosystem Mosaics
+		\begin{itemize}
+			\item Proportions of habitat patches
+		\end{itemize}
+	\end{itemize}
+\end{itemize}
+\underline{The Framework!}
+	\begin{itemize}
+		\item Step 1 - Choice of Components
+		\begin{itemize}
+			\item Their example contructs n-dimensional hypervolumes in time-series of n-ecosystem traits at equilibrium.
+			\item My study will also look at space
+		\end{itemize}
+		
+		\item Step 2 - Data Treatment and Hypervolume calculation
+		\begin{itemize}
+			\item Number of dimensions must be fixed to maintain comparability
+			\item Need comparable units (centred and scaled)
+			\item Not correlated!! (Look at PCAs, PCoAs etc to get around this?)
+			\item Try not to exceed 5-8 variables to avoid disjointed and holey hypervolumes
+			\item Hypervolume calculations follow a multi-dimensional kernal density estimator procedure. See \cite{Blonder2014}   
+		\end{itemize}
+		
+		\item Step 3 - Comparing hypervolumes and analysis of community changes
+		\begin{itemize}
+			\item Sufficiently large changes in environmental conditions should produce shifts in community structure. $\Rightarrow$ These should be seen in the constructed hypervolumes...
+			\item Three possible measures
+			\begin{itemize}
+				\item Overall similarity $\Rightarrow$ Overlap
+				\item Changes in mean values of components $\Rightarrow$ Distance between centeroids
+				\item Changes in Variance $\Rightarrow$ Changes in hypervolume size 
+			\end{itemize}
+		\end{itemize}
+		
+		\item Step 4 - Complementary metrics for more detailed analysis
+		\begin{itemize}
+			\item Hypervolume comparisons don't really tell you what changed so there is  need for further analysis looking at the specific components used...
+		\end{itemize}
+ 
+ \underline{Working Example}
+ \begin{itemize}
+		 	\item Based on simulated data (Don't really understand this!)
+		 	\item Habitats under climate change (CC) and land use change (LUC)
+		 	\item calculated hypervolume every 15 years of simulation
+		 	\item used actual abundances instead of relative - not interested in dominance/structural changes.
+		 	\begin{itemize}
+		 		\item This also meant the differences between hypervolumes were bigger (easier to see)
+		 	\end{itemize}
+		 	\item hypervolume overlap was significantly affected by CC \& LUC
+		 	\item hypervolumes on traits and on Plant Functional Diversity (PFDs)
+		 	\item Trait hypervolumes tended to be smaller
+ \end{itemize}
+	\end{itemize}
+	 
+\underline{Discussion} 
+\begin{itemize}
+	\item Environmental changes impact biodiversity at many levels
+	\item Need to measure contribution of different taxanomic, functional or landscape entities
+	
+	\item Analysing Magnitude of Change
+	\begin{itemize}
+		\item Size $\Rightarrow$ Variance
+		\item Mean $\Rightarrow$ Position of centeroid
+		\item Similarity $\Rightarrow$ Overlap
+	\end{itemize}
+
+	\item \textbf{N-dimensional hypervolumes do not summarise components as one metric but describe them as an n-dimensional cloud!}
+	
+	\item Assessing type of change
+	\begin{itemize}
+		\item can be informative about what facets of an ecosystem were most affected by ecosystem perturbation
+		\item complimentary measures are important though!
+	\end{itemize}
+
+	\item Following changes in time
+	\begin{itemize}
+		\item Since hypervolumes define different ecosystem structures they can be used to test all types of ecosystem stability
+		\begin{itemize}
+			\item Persistence $\Rightarrow$ Time before change once perturbation starts
+			\item Resilience $\Rightarrow$ Return to state after perturbation
+			\item Resistance $R\Rightarrow$ Amount of change after perturbation
+			\item Variabiltiy $\Rightarrow$ Variation before vs after perturbation
+		\end{itemize}
+		\item Implications for ecosystem services
+		\item Small overlaps may still indicate changes in ecosystem state. I think this study saw overlaps = 0 this is not as likely on real data!. 
+	\end{itemize}
+
+	\item Advantages of hypervolumes
+	\begin{itemize}
+		\item Ecosystems are made up of a multiplicity of components
+		\item Allows for detec tion of finer changes
+		\item negates problems with habitat mosaics and ecotone interactions
+		\item Can be used to predict future responses and resilience to extreme events/perturbations
+	\end{itemize}
+\end{itemize}
