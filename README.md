@@ -38,7 +38,6 @@ masters_project/
 │   │
 │   ├── 00_hv_functions.R
 │   ├── compare_hv.R
-│   ├── hv_functions.R
 │   ├── sort_data.py
 │   └── species_ordination.R
 │

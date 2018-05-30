@@ -13,3 +13,4 @@
 Code/.ropeproject/*
 *.pdf
 Results/*
+!Results/.gitkeep
