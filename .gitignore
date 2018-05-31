@@ -14,3 +14,4 @@ Code/.ropeproject/*
 *.pdf
 Results/*
 !Results/.gitkeep
+Code/.ipynb_checkpoints/*

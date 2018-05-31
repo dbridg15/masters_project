@@ -11,10 +11,26 @@ require(hypervolume)
 # TODO
 #   *Is hypervolume_svm the correct method?
 
+
 ###############################################################################
-#
+# functions
 ###############################################################################
 
+# takes dataframe and returns count matrix
+count_matrix <- function(df){
+  df[is.na(df)] <- 0
+  df <- as.matrix(df)
+  return(df)
+}
+
+# takes dataframe and returns relative abundance matrix
+rel_abnd <- function(df){
+  df <- count_matrix(df)
+  df <- t(apply(df, 1, function(x) x/sum(x)))
+  return(df)
+}
+
+# hypervolume comparisons
 setClass("hv_comp", slots = c(name                 = "character",
                               hvlist               = "HypervolumeList",
                               distance_matrix      = "matrix",
