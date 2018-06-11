@@ -117,7 +117,15 @@ tree_matrix.to_csv("../Results/trees_matrix.csv")
 ################################################################################
 
 # readin RAW data
-mammal_df = pd.read_csv("../Data/small_mammals.csv")
+m_df   = pd.read_csv("../Data/small_mammals.csv")
+
+m_lkup = pd.read_csv("../Data/RAW/small_mammals/mammals_lookup.csv")
+
+# need to decide which one to use!
+# PanTHERIA_WR05 = pd.read_csv("../Data/RAW/small_mammals/PanTHERIA/PanTHERIA_1-0_WR05_Aug2008.txt", sep = "\t")
+PanTHERIA_WR93 = pd.read_csv("../Data/RAW/small_mammals/PanTHERIA/PanTHERIA_1-0_WR93_Aug2008.txt", sep = "\t")
+
+PanTHERIA_WR93[PanTHERIA_WR93 == -999] = np.nan
 
 # consistant and better column names
 new_Cnames = ['Occasion',
@@ -153,33 +161,67 @@ new_Cnames = ['Occasion',
               'Flagged']
 
 # give each census these column names
-mammal_df.columns = new_Cnames
+m_df.columns = new_Cnames
 
 # get rid of question marks from sex - just go with what they thought...
-mammal_df['Sex'] = mammal_df['Sex'].str.replace('?', "")
-mammal_df['Occasion'] = mammal_df['Occasion'].str.replace('--', '-')
-mammal_df['Trap_ID'] = mammal_df['Trap_ID'].str.replace('--', '-')
+m_df['Sex']       = m_df['Sex'].str.replace('?', "")
+m_df['Occasion']  = m_df['Occasion'].str.replace('--', '-')
+m_df['Trap_ID']   = m_df['Trap_ID'].str.replace('--', '-')
 
+m_df['plot']      = m_df.apply(lambda row: row['Occasion'].split("-")[0], axis = 1)
+m_df['sub_plot']  = m_df.apply(lambda row: row['Occasion'].split("-")[3], axis = 1)
+m_df['trap_no']   = m_df.apply(lambda row: row['Trap_ID'].split("-")[2], axis = 1)
 
-mammal_df['plot']     = mammal_df.apply(lambda row: row['Occasion'].split("-")[0], axis = 1)
-mammal_df['sub_plot'] = mammal_df.apply(lambda row: row['Occasion'].split("-")[3], axis = 1)
-mammal_df['trap_no']  = mammal_df.apply(lambda row: row['Trap_ID'].split("-")[2], axis = 1)
+m_df['census']    = m_df.apply(lambda row: row['Occasion'].split("-")[2], axis = 1)
+m_df['repeat']    = m_df.apply(lambda row: row['Occasion'].split("-")[1], axis = 1)  # not actually sure what this is...
 
-mammal_df['census']   = mammal_df.apply(lambda row: row['Occasion'].split("-")[2], axis = 1)
-mammal_df['repeat']   = mammal_df.apply(lambda row: row['Occasion'].split("-")[1], axis = 1)  # not actually sure what this is...
+m_df['subplotx']  = m_df['plot'] + "-" + m_df['repeat'].astype(str) + "_sp" + m_df['sub_plot'].astype(str)
 
+m_df['subplotxc'] = m_df['subplotx'] + "_c" + m_df['census'].astype(str)
 
-mammal_df['subplotx'] = mammal_df['plot'] + "-" + mammal_df['repeat'].astype(str) + "_sp" + mammal_df['sub_plot'].astype(str)
+# strip whitespace around Species codes
+m_df.Species = m_df.Species.str.strip()
 
-mammal_df['subplotxc'] = mammal_df['subplotx'] + "_c" + mammal_df['census'].astype(str)
+# if its a questionmark - I just go with it
+# if its an either or I go with the first one!
+m_df.loc[m_df.loc[:, "Species"] == "squirrel",     "Species"] = "unknown"
+m_df.loc[m_df.loc[:, "Species"] == "SS?",          "Species"] = "SS"
+m_df.loc[m_df.loc[:, "Species"] == "RS or SS" ,    "Species"] = "RS"
+m_df.loc[m_df.loc[:, "Species"] == "WH or SS",     "Species"] = "WH"
+m_df.loc[m_df.loc[:, "Species"] == "BS/RS?",       "Species"] = "BS"
+m_df.loc[m_df.loc[:, "Species"] == "PTSQ?",        "Species"] = "PTSQ"
+m_df.loc[m_df.loc[:, "Species"] == "LETRS",        "Species"] = "LETRS?"   # for some reason the lookup table has a ?
+m_df.loc[m_df.loc[:, "Species"] == "CBS?",         "Species"] = "CBS"
+m_df.loc[m_df.loc[:, "Species"] == "SL?TRS",       "Species"] = "SLTRS"
+m_df.loc[m_df.loc[:, "Species"] == "SLTRS?",       "Species"] = "SLTRS"
+m_df.loc[m_df.loc[:, "Species"] == "L?TRS",        "Species"] = "SLTRS"
+m_df.loc[m_df.loc[:, "Species"] == "LSQ?",         "Species"] = "LSQ"
+m_df.loc[m_df.loc[:, "Species"] == "LTRS or CTRS", "Species"] = "CTRS"     # went with CTRS as LTRS could refer to a couple
+m_df.loc[m_df.loc[:, "Species"] == "LTRS",         "Species"] = "LETRS?"   # not convinced about this one
+m_df.loc[m_df.loc[:, "Species"] == "squirrel",     "Species"] = "unknown"  # mmm?
+m_df.loc[m_df.loc[:, "Species"] == "?",            "Species"] = "unknown"
+m_df.loc[m_df.loc[:, "Species"] == "Unknown",      "Species"] = "unknown"
 
-mammal_df.to_csv("../Results/mammals_sorted.csv", index = False)
+m_df.loc[pd.isna(m_df["Species"]), "Species"] = "unknown"
 
 # species matrix
-mammal_matrix = mammal_df.groupby(['subplotxc', 'Species']).size().unstack()
+m_matrix = m_df.groupby(['subplotxc', 'Species']).size().unstack()
 
-mammal_matrix.to_csv("../Results/mammals_matrix.csv")
+m_matrix.to_csv("../Results/mammals_matrix.csv")
 
+# merge with lookup table
+m_df = pd.merge(m_df, m_lkup, how = "left", left_on = "Species", right_on = "Code")
+
+m_df.loc[pd.isnull(m_df.Scientific).nonzero()[0], "Scientific"] = "Unknown unknown"
+
+m_df.loc[m_df.loc[:, "Scientific"] == "Calliosciurus adamsi" , "Scientific"] = "Callosciurus adamsi"
+m_df.loc[m_df.loc[:, "Scientific"] == "Calliosciurus notatus", "Scientific"] = "Callosciurus notatus"
+
+# merging with PanTHERIA database
+
+m_df = pd.merge(m_df, PanTHERIA_WR93, how = "left", left_on = "Scientific", right_on = "MSW93_Binomial")
+
+m_df.to_csv("../Results/mammals_sorted.csv", index = False)
 
 ################################################################################
 # beetles
