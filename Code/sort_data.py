@@ -102,15 +102,23 @@ tree_df['plot']      = tree_df['plot'].replace(" ", "", regex=True)
 tree_df['genus']     = tree_df.apply(lambda row: row.binomial.split(" ")[0], axis = 1)
 tree_df['subplotx']  = tree_df['plot'] + "_sp" + tree_df['subplot'].astype(str)
 tree_df['subplotxc'] = tree_df['subplotx'] + "_c" + tree_df['census'].astype(str)
+tree_df['plot_c']    = tree_df['plot'] + "_c" + tree_df['census'].astype(str)
 
 # save to csv
 tree_df.to_csv("../Results/trees_sorted.csv", index = False)
 
 # species matrix
 tree_matrix = tree_df.groupby(['subplotxc', 'binomial']).size().unstack()
-
+tree_matrix = tree_matrix.fillna(value = 0)
 tree_matrix.to_csv("../Results/trees_matrix.csv")
 
+tree_genus_matrix = tree_df.groupby(['subplotxc', 'genus']).size().unstack()
+tree_genus_matrix = tree_genus_matrix.fillna(value = 0)
+tree_genus_matrix.to_csv("../Results/trees_genus_matrix.csv")
+
+tree_family_matrix = tree_df.groupby(['subplotxc', 'family']).size().unstack()
+tree_family_matrix = tree_family_matrix.fillna(value = 0)
+tree_family_matrix.to_csv("../Results/trees_family_matrix.csv")
 
 ################################################################################
 # mammals
@@ -206,7 +214,7 @@ m_df.loc[pd.isna(m_df["Species"]), "Species"] = "unknown"
 
 # species matrix
 m_matrix = m_df.groupby(['subplotxc', 'Species']).size().unstack()
-
+m_matrix = m_matrix.fillna(value = 0)
 m_matrix.to_csv("../Results/mammals_matrix.csv")
 
 # merge with lookup table
@@ -259,5 +267,5 @@ beetle_df.to_csv("../Results/beetles_sorted.csv", index = False)
 
 
 beetle_matrix = beetle_df.groupby(['block_trap_census', 'family']).size().unstack()
-
+beetle_matrix = beetle_matrix.fillna(value = 0)
 beetle_matrix.to_csv("../Results/beetles_matrix.csv")
