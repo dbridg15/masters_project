@@ -135,6 +135,8 @@ PanTHERIA_WR93 = pd.read_csv("../Data/RAW/small_mammals/PanTHERIA/PanTHERIA_1-0_
 
 PanTHERIA_WR93[PanTHERIA_WR93 == -999] = np.nan
 
+EltonTraits = pd.read_csv("../Data/RAW/small_mammals/MamFuncDat.txt", sep = "\t")
+
 # consistant and better column names
 new_Cnames = ['Occasion',
               'Date',
@@ -227,7 +229,9 @@ m_df.loc[m_df.loc[:, "Scientific"] == "Calliosciurus notatus", "Scientific"] = "
 
 # merging with PanTHERIA database
 
-m_df = pd.merge(m_df, PanTHERIA_WR93, how = "left", left_on = "Scientific", right_on = "MSW93_Binomial")
+#m_df = pd.merge(m_df, PanTHERIA_WR93, how = "left", left_on = "Scientific", right_on = "MSW93_Binomial")
+
+m_df = pd.merge(m_df, EltonTraits, how = "left", on = "Scientific")
 
 m_df.to_csv("../Results/mammals_sorted.csv", index = False)
 
