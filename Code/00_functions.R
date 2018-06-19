@@ -5,12 +5,15 @@
 # Author: David Bridgwood (dmb2417@ic.ac.uk)
 
 # require
-
 cat("\n loading required packages\n\n")
 require(vegan)
 require(hypervolume)
 require(dplyr)
 
+
+# TODO!
+# - would be nice if the hvs_rslts function could take any datframe not just
+# the pca output.
 
 ###############################################################################
 # classes
@@ -164,7 +167,7 @@ compare_census <- function(df, hv_list){
 #' @param df a dataframe which is the axis of hypervolume as columns and plots/census as rows 
 #' @export
 #' @examples
-#' compare_census(df)
+#' hvs_rslts(df)
 
 hvs_rslts <- function(df){
 
@@ -195,9 +198,9 @@ hvs_rslts <- function(df){
 
 		# subset of the pca space with require plot/census and PCs
     tmp <- subset(df, plot == p & census == c, select = c("PC1", "PC2", "PC3"))
-    tmp <- scale(tmp, center = T, scale = T)
+    # tmp <- scale(tmp, center = T, scale = T)
   
-    if (nrow(tmp) < 5){
+    if (nrow(tmp) < 2){
       hv <- NA
     } else{
       hv <- hypervolume_gaussian(tmp, name = i, verbose = FALSE)
@@ -234,4 +237,25 @@ hvs_rslts <- function(df){
   cat("\n")
 
   return(out)
+}
+
+
+################################## plot_hvs ###################################
+
+#' plots hypervolumes for a given plot
+#' 
+#' @param hv_rslts an object of class hvs.rslts
+#' @export
+#' @examples
+#' plot_hvs(df)
+
+plot_hvs <- function(hvs_rslts, plt){
+    
+    match_plt <- which(unlist(strsplit(names(hvs_rslts@hvlist), "_"))[c(T, F)] == plt)
+    
+    hvlist <- hvs_rslts@hvlist[match_plt]
+    hvlist <- hvlist[which(!is.na(hvlist))]
+    hvlist <- new("HypervolumeList", HVList = hvlist)
+    
+    plot(hvlist)
 }
