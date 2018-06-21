@@ -229,7 +229,7 @@ m_df.loc[m_df.loc[:, "Scientific"] == "Calliosciurus notatus", "Scientific"] = "
 
 # merging with PanTHERIA database
 
-#m_df = pd.merge(m_df, PanTHERIA_WR93, how = "left", left_on = "Scientific", right_on = "MSW93_Binomial")
+m_df = pd.merge(m_df, PanTHERIA_WR93, how = "left", left_on = "Scientific", right_on = "MSW93_Binomial")
 
 m_df = pd.merge(m_df, EltonTraits, how = "left", on = "Scientific")
 

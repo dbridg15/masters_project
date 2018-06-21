@@ -82,6 +82,30 @@ do_pca <- function(df, scale = FALSE, plot = FALSE){
 }
 
 
+################################# scale_axis ##################################
+
+#' function makes datframe with scaled axis for creation of hv
+#' 
+#' returns a dataframe with comparisons of hypervolumes census to census
+#' @param df a dataframe which is the output of pca
+#' @param axis vector of axis names from which hv will be created 
+#' @export
+#' @examples
+#' scale_axis(pca.rslt_trees@axis, axis = c("PC1", "PC2", "PC3"))
+
+scale_axis <- function(df, axis){
+
+  out <- df[, axis]
+  out <- as.data.frame(scale(out))
+
+  out$plot    <- df$plot
+  out$subplot <- df$subplot
+  out$census  <- df$census
+  
+  return(out)
+}
+
+
 ################################ compare_census ###############################
 
 #' function compares hypervolumes census to census
@@ -165,25 +189,29 @@ compare_census <- function(df, hv_list){
 #' 
 #' returns a object of class hv.rslts with summary stats and comparisons of hypervolumes
 #' @param df a dataframe which is the axis of hypervolume as columns and plots/census as rows 
+#' @param axis - vector of axis from which to draw hypervolumes
 #' @export
 #' @examples
-#' hvs_rslts(df)
+#' hvs_rslts(df, axis = c("PC1", "PC2", "PC3"))
 
-hvs_rslts <- function(df){
+hvs_rslts <- function(df, axis){
+
+  df <- scale_axis(df, axis)
 
 	# make list of hv names to work off 
   names <- c()
   for (p in unique(df$plot)){ for (c in unique(df$census)){
     names <- c(names, paste0(p, "_", c)) }}
 
+  cols = c("plot", "census", paste0("centroid_", axis), paste0(axis, "_l"),
+           paste0(axis, "_h"))
+
 	# empty list to store hypervolumes as they're built
   hvlist <- list()
- 
+
 	# construct df to store summary stats for each hv
-  rslts           <- data.frame(matrix(NA, nrow = length(names), ncol = 12))
-  colnames(rslts) <- c("plot", "census", "centroid_PC1", "centroid_PC2",
-                       "centroid_PC3", "volume", "PC1_l", "PC1_h", "PC2_l",
-                       "PC2_h", "PC3_l", "PC3_h")
+  rslts           <- data.frame(matrix(NA, nrow = length(names), ncol = length(cols)))
+  colnames(rslts) <- cols
   rownames(rslts) <- names
   rslts$plot_c    <- names
 
@@ -197,9 +225,9 @@ hvs_rslts <- function(df){
     c <- unlist(strsplit(i, "_"))[[2]]  # census
 
 		# subset of the pca space with require plot/census and PCs
-    tmp <- subset(df, plot == p & census == c, select = c("PC1", "PC2", "PC3"))
-    # tmp <- scale(tmp, center = T, scale = T)
-  
+    tmp <- subset(df, plot == p & census == c,
+                  select = colnames(df)[!(colnames(df) %in% c("plot", "subplot", "census"))])
+
     if (nrow(tmp) < 2){
       hv <- NA
     } else{
@@ -213,19 +241,16 @@ hvs_rslts <- function(df){
 
     if (class(hv) == "Hypervolume"){
 
-      rslts[i, "centroid_PC1"] <- get_centroid(hv)[1]
-      rslts[i, "centroid_PC2"] <- get_centroid(hv)[2]
-      rslts[i, "centroid_PC3"] <- get_centroid(hv)[3]
       rslts[i, "volume"]       <- hv@Volume
-      rslts[i, "PC1_l"]        <- min(hv@RandomPoints[,1])
-      rslts[i, "PC1_h"]        <- max(hv@RandomPoints[,1])
-      rslts[i, "PC2_l"]        <- min(hv@RandomPoints[,2])
-      rslts[i, "PC2_h"]        <- max(hv@RandomPoints[,2])
-      rslts[i, "PC3_l"]        <- min(hv@RandomPoints[,3])
-      rslts[i, "PC3_h"]        <- max(hv@RandomPoints[,3])
 
+      a <- as.data.frame(get_centroid(hv))
+
+      for (z in rownames(a)){
+        rslts[i, paste0("centroid_", z)] <- a[z, ]
+        rslts[i, paste0(z, "_l")]        <- min(hv@RandomPoints[,z])
+        rslts[i, paste0(z, "_h")]        <- max(hv@RandomPoints[,z])
+      }
     }     
-
   }
   
   # put results through compare census
@@ -249,11 +274,11 @@ hvs_rslts <- function(df){
 #' @examples
 #' plot_hvs(df)
 
-plot_hvs <- function(hvs_rslts, plt){
+plot_hvs <- function(hvs.rslts, plt){
     
-    match_plt <- which(unlist(strsplit(names(hvs_rslts@hvlist), "_"))[c(T, F)] == plt)
+    match_plt <- which(unlist(strsplit(names(hvs.rslts@hvlist), "_"))[c(T, F)] == plt)
     
-    hvlist <- hvs_rslts@hvlist[match_plt]
+    hvlist <- hvs.rslts@hvlist[match_plt]
     hvlist <- hvlist[which(!is.na(hvlist))]
     hvlist <- new("HypervolumeList", HVList = hvlist)
     
