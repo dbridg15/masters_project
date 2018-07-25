@@ -51,6 +51,9 @@ def sort_data(df, census_no):  # give new column names, delete NAs and dead...
     # give each census these column names
     df.columns = new_Cnames
 
+    # sort out dates
+    df.date = pd.to_datetime(df.date, dayfirst = True)
+
     # get unique ID - combine plot and tag_no
     df = df.assign(ID = df['plot'] + df['tag_no'].map(str))
 

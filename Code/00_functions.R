@@ -112,38 +112,65 @@ scale_axis <- function(df, axis){
 #' 
 #' returns a dataframe with comparisons of hypervolumes census to census
 #' @param df a dataframe which is the summary statistics of a hvlist   
-#' @param hv_list a list containg all hypervolumes 
+#' @param hv_list a list containg all hypervolumes
+#' @param what either seq - only sequenital census compared (1-2, 2-3, 3-4) or all
 #' @export
 #' @examples
 #' compare_census(df, hv_list)
 
-compare_census <- function(df, hv_list){
+compare_census <- function(df, hv_list, what = "seq"){
 
   # set up df to store results
-  cen  <- sort(unique(df$census))  # all censuses in order (c1 - c2 - c3 -c4)
-  plts <- unique(df$plot)
+  cen     <- sort(unique(df$census))  # all censuses in order (c1 - c2 - c3 -c4)
+  plts    <- unique(df$plot)
+  compcen <- combn(cen, 2)
 
-  # df with row as each comparison and columns as stats
-  compare <- data.frame(matrix(NA, nrow = length(plts)*(length(cen)-1), ncol = 8))
+  if (what == "all"){
+    # df with row as each comparison and columns as stats
+    compare <- data.frame(matrix(NA, nrow = length(plts)*ncol(compcen), ncol = 8))
 
-  colnames(compare) <- c("plot", "census_step", "centroid_change", "overlap",
-                         "unique_1", "unique_2", "abs_vol_change",
-                         "per_vol_change")
+    colnames(compare) <- c("plot", "census_step", "centroid_change", "overlap",
+                           "unique_1", "unique_2", "abs_vol_change",
+                           "per_vol_change")
 
-  # there is DEFINATELY a mode efficient way of doing this...
-  tmp <- list()
-  for (i in 1:(length(cen)-1)){
-    tmp[[i]] <- paste0(cen[i], "-", cen[i+1])
+    # there is DEFINATELY a mode efficient way of doing this...
+
+    tmp <- list()
+    for (i in 1:ncol(compcen)){
+      tmp[[i]] <- paste0(compcen[1, i], "-", compcen[2, i])
+    }
+    comp <- list()
+    for (p in plts){
+      comp <- c(comp, paste0(p, "_", tmp))
+    }
+
+    rownames(compare)   <- comp
+
+    compare$plot        <- unlist(strsplit(unlist(comp), "_"))[ c(T, F)]
+    compare$census_step <- unlist(strsplit(unlist(comp), "_"))[ c(F, T)]
+  } else if (what == "seq"){
+
+    compare <- data.frame(matrix(NA, nrow = length(plts)*(length(cen)-1), ncol = 8))
+
+    colnames(compare) <- c("plot", "census_step", "centroid_change", "overlap",
+                           "unique_1", "unique_2", "abs_vol_change",
+                           "per_vol_change")
+
+    # there is DEFINATELY a mode efficient way of doing this...
+    tmp <- list()
+    for (i in 1:(length(cen)-1)){
+      tmp[[i]] <- paste0(cen[i], "-", cen[i+1])
+    }
+    comp <- list()
+    for (p in plts){
+      comp <- c(comp, paste0(p, "_", tmp))
+    }
+
+    rownames(compare)   <- comp
+
+    compare$plot        <- unlist(strsplit(unlist(comp), "_"))[ c(T, F)]
+    compare$census_step <- unlist(strsplit(unlist(comp), "_"))[ c(F, T)]
   }
-  comp <- list()
-  for (p in plts){
-    comp <- c(comp, paste0(p, "_", tmp))
-  }
-
-  rownames(compare)   <- comp
-
-  compare$plot        <- unlist(strsplit(unlist(comp), "_"))[ c(T, F)]
-  compare$census_step <- unlist(strsplit(unlist(comp), "_"))[ c(F, T)]
 
   # do some cleanup
   rm(tmp, comp, cen, plts)
@@ -194,7 +221,7 @@ compare_census <- function(df, hv_list){
 #' @examples
 #' hvs_rslts(df, axis = c("PC1", "PC2", "PC3"))
 
-hvs_rslts <- function(df, axis){
+hvs_rslts <- function(df, axis, what = "seq"){
 
   df <- scale_axis(df, axis)
 
@@ -254,7 +281,7 @@ hvs_rslts <- function(df, axis){
   }
   
   # put results through compare census
-  compare <- compare_census(rslts, hvlist)
+  compare <- compare_census(rslts, hvlist, what = what)
 
   # save output to hv.rslts class
   out <- new("hv.rslts", hvlist = hvlist, rslts = rslts, compare = compare)
@@ -274,8 +301,12 @@ hvs_rslts <- function(df, axis){
 #' @examples
 #' plot_hvs(df)
 
-plot_hvs <- function(hvs.rslts, plt){
-    
+plot_hvs <- function(hvs.rslts){
+
+  plts <- unique(hvs.rslts@compare$plot)
+
+  for (plt in plts){
+
     match_plt <- which(unlist(strsplit(names(hvs.rslts@hvlist), "_"))[c(T, F)] == plt)
     
     hvlist <- hvs.rslts@hvlist[match_plt]
@@ -283,4 +314,5 @@ plot_hvs <- function(hvs.rslts, plt){
     hvlist <- new("HypervolumeList", HVList = hvlist)
     
     plot(hvlist)
+  }
 }

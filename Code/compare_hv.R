@@ -1,60 +1,62 @@
 #!usr/bin/env Rscript
 
-# script: compare_hv.R 
-# Desc:   
+# script: 00_functions.R 
+# Desc:   contains all R functions for project
 # Author: David Bridgwood (dmb2417@ic.ac.uk)
 
 # require
-source("00_hv_functions.R")
+require(ggplot2)
+source("00_functions.R")
+
 
 ###############################################################################
 #
 ###############################################################################
 
-load("../Results/tree_mds_out.Rdata")
-load("../Results/beetle_mds_out.Rdata")
-load("../Results/mammal_mds_out.Rdata")
+# read in data
+trees_df   = read.csv("../Results/trees_genus_matrix.csv", row.names=1)
+mammals_df = read.csv("../Results/mammals_matrix.csv", row.names=1)
+beetles_df = read.csv("../Results/beetles_matrix.csv", row.names=1)
+
+# do pca
+pca.rslt_trees   = do_pca(trees_df, scale = F, plot = F)
+pca.rslt_mammals = do_pca(mammals_df, scale = F, plot = F)
+pca.rslt_beetles = do_pca(beetles_df, scale = F, plot = F)
+
+cat("\n\nExplained Varience Trees: ", pca.rslt_trees@exp.var, "\n")
+cat("\n\nExplained Varience Mammals: ", pca.rslt_mammals@exp.var, "\n")
+cat("\n\nExplained Varience Beetles: ", pca.rslt_beetles@exp.var, "\n")
 
 
-# overall dataframe from species ordination
-tree_df   <- as.data.frame(tree_relab_mds$points)
-mammal_df <- as.data.frame(mammal_relab_mds$points)
-beetle_df <- as.data.frame(beetle_relab_mds$points)
+# make and compare hypervolumes
+hvs_rslts_trees   = hvs_rslts(pca.rslt_trees@axis, axis = c("PC1", "PC2", "PC3"))
+hvs_rslts_mammals = hvs_rslts(pca.rslt_mammals@axis, axis = c("PC1", "PC2", "PC3"))
+hvs_rslts_beetles = hvs_rslts(pca.rslt_beetles@axis, axis = c("PC1", "PC2", "PC3"))
+
+cat("\n\nTrees % NA: ",   sum(is.na(hvs_rslts_trees@rslts$centroid_PC1))/nrow(hvs_rslts_trees@rslts), "\n")
+cat("\n\nMammals % NA: ", sum(is.na(hvs_rslts_mammals@rslts$centroid_PC1))/nrow(hvs_rslts_mammals@rslts), "\n")
+cat("\n\nBeetles % NA: ", sum(is.na(hvs_rslts_beetles@rslts$centroid_PC1))/nrow(hvs_rslts_beetles@rslts), "\n")
 
 
-# function...
-test <- function(df){
+# plot hypervolumes
 
-  df$plot    <- unlist(strsplit(row.names(df), "_"))[ c(T,F,F)]
-  df$subplot <- unlist(strsplit(row.names(df), "_"))[ c(F,T,F)]
-  df$census  <- unlist(strsplit(row.names(df), "_"))[ c(F,F,T)]
+pdf("../Results/plots/trees_community.pdf")
+  plot_hvs(hvs_rslts_trees)
+dev.off()
 
+pdf("../Results/plots/beetles_community.pdf")
+  plot_hvs(hvs_rslts_beetles)
+dev.off()
 
-  # compare census, same plot
-  for (i in unique(df$plot)){
-    cat(paste0("\n\n==============================================================================="))
-    cat(paste("\nPlot:", i, "\n"))
-    assign(paste0(tolower(i), "_df"), subset(df, plot == i))
-    assign(paste0(tolower(i), "_cc"), 
-           compare_hypervolumes(df = subset(df, plot == i), compare = "census",
-                                type = "svm", plot = FALSE))
-  }
+pdf("../Results/plots/mammals_community.pdf")
+  plot_hvs(hvs_rslts_mammals)
+dev.off()
 
 
-  # compare plot, same census
-  for (i in unique(df$census)){
-    cat(paste0("\n\n==============================================================================="))
-    cat(paste("\nCensus:", i, "\n"))
-    assign(paste0(tolower(i), "_df"), subset(df, census == i))
-    assign(paste0(tolower(i), "_cc"), 
-           compare_hypervolumes(df = subset(df, census == i), compare = "plot",
-                                type = "svm", plot = FALSE))
-  }
+# saving output
 
-  return(df)
-}
+save(hvs_rslts_trees, hvs_rslts_mammals, hvs_rslts_beetles, file = "../Results/compare_hv.Rout")
 
 
-tree_df   <- test(tree_df)
-mammal_df <- test(mammal_df)
-beetle_df <- test(beetle_df)
+
+
