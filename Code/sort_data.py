@@ -106,6 +106,7 @@ tree_df['genus']     = tree_df.apply(lambda row: row.binomial.split(" ")[0], axi
 tree_df['subplotx']  = tree_df['plot'] + "_sp" + tree_df['subplot'].astype(str)
 tree_df['subplotxc'] = tree_df['subplotx'] + "_c" + tree_df['census'].astype(str)
 tree_df['plot_c']    = tree_df['plot'] + "_c" + tree_df['census'].astype(str)
+tree_df['census']    = "c" + tree_df.census.astype(str)
 
 # save to csv
 tree_df.to_csv("../Results/trees_sorted.csv", index = False)
@@ -142,7 +143,7 @@ EltonTraits = pd.read_csv("../Data/RAW/small_mammals/MamFuncDat.txt", sep = "\t"
 
 # consistant and better column names
 new_Cnames = ['Occasion',
-              'Date',
+              'date',
               'Trap_ID',
               'Species',
               'New/Return',
@@ -186,11 +187,15 @@ m_df['sub_plot']  = m_df.apply(lambda row: row['Occasion'].split("-")[3], axis =
 m_df['trap_no']   = m_df.apply(lambda row: row['Trap_ID'].split("-")[2], axis = 1)
 
 m_df['census']    = m_df.apply(lambda row: row['Occasion'].split("-")[2], axis = 1)
+m_df['census']    = "c" + m_df.census.astype(str)
 m_df['repeat']    = m_df.apply(lambda row: row['Occasion'].split("-")[1], axis = 1)  # not actually sure what this is...
+
 
 m_df['subplotx']  = m_df['plot'] + "-" + m_df['repeat'].astype(str) + "_sp" + m_df['sub_plot'].astype(str)
 
-m_df['subplotxc'] = m_df['subplotx'] + "_c" + m_df['census'].astype(str)
+m_df['subplotxc'] = m_df['subplotx'] + "_" + m_df['census'].astype(str)
+
+m_df['plot']      =  m_df['plot'] + "-" + m_df['repeat'].astype(str)
 
 # strip whitespace around Species codes
 m_df.Species = m_df.Species.str.strip()
@@ -270,9 +275,47 @@ beetle_df = beetle_df[beetle_df.census != "incomplete"]
 
 beetle_df['block_trap_census'] = beetle_df.block + "_" + beetle_df.trap_N.astype(str) + "_" + beetle_df.census
 
+beetle_df["plot"] = beetle_df["block"]
+
 beetle_df.to_csv("../Results/beetles_sorted.csv", index = False)
 
 
 beetle_matrix = beetle_df.groupby(['block_trap_census', 'family']).size().unstack()
 beetle_matrix = beetle_matrix.fillna(value = 0)
 beetle_matrix.to_csv("../Results/beetles_matrix.csv")
+
+
+################################################################################
+# census time differences
+################################################################################
+
+
+def census_diff(df):
+
+    df.date = pd.to_datetime(df.date)
+    grp = df.groupby(["plot",  "census"])
+    cen = grp.date.agg(['min', 'max'])
+    cen["mid"] = (cen["min"] + (cen["max"] - cen["min"])/2).dt.date
+    cen["difference"] = cen["mid"].diff().astype('timedelta64[D]')
+    cen.loc[cen["difference"] < 0 , "difference"] = np.NAN
+    cen["diff_yrs"] = cen.difference/365
+
+    cen.reset_index(level=0, inplace=True)
+    cen.reset_index(level=0, inplace=True)
+
+    cen.census.astype(str)
+    cen["step"] = cen.census.shift() + "-" + cen.census
+    cen.loc[cen["difference"].isnull(), "step"] = np.NaN
+
+    cen.index = cen['plot'] + "_" + cen['step']
+
+    return cen
+
+
+trees_cen = census_diff(tree_df)
+mamls_cen = census_diff(m_df)
+btles_cen = census_diff(beetle_df)
+
+trees_cen.to_csv("../Results/trees_census_dates.csv")
+mamls_cen.to_csv("../Results/mammals_census_dates.csv")
+btles_cen.to_csv("../Results/beetles_census_dates.csv")

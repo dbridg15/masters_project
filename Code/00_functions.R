@@ -178,9 +178,10 @@ compare_census <- function(df, hv_list, what = "seq"){
   cat("\n")
 
   for (i in rownames(compare)){
-
-    cat("\rComparing Hypervolume ", which(rownames(compare) == i), " of ",
-        nrow(compare), ": ", i)
+    
+    cat("\rComparing Hypervolume", sprintf("%02d", which(rownames(compare) == i)), " of ",
+        sprintf("%02d", nrow(compare)), ": ",
+        sprintf(paste0("%-0", max(nchar(rownames(compare))), "s"), i))
 
     # hypervolumes taken from hv_list based on row currently in
     hv1 = hv_list[[paste0(compare[i, "plot"], "_", unlist(strsplit(compare[i, "census_step"], "-"))[c(T, F)])]]
@@ -246,7 +247,9 @@ hvs_rslts <- function(df, axis, what = "seq"){
     
   for (i in names){
     
-    cat("\rBuilding Hypervolume ", which(names == i), " of ", length(names), ": ", i)
+    cat("\rBuilding Hypervolume ", sprintf("%02d", which(names == i)), " of ",
+        sprintf("%02d", length(names)), ": ",
+        sprintf(paste0("%-0", max(nchar(names)), "s"), i))
 
     p <- unlist(strsplit(i, "_"))[[1]]  # plot
     c <- unlist(strsplit(i, "_"))[[2]]  # census
@@ -315,4 +318,18 @@ plot_hvs <- function(hvs.rslts){
     
     plot(hvlist)
   }
+}
+
+
+############################ overlap_time #####################################
+
+overlap_time = function(df, cen){
+    
+    cen = cen[complete.cases(cen), ]
+    df$X = row.names(df)
+    df = merge(df, cen[ , c("X", "min", "max", "mid", "difference", "diff_yrs")], by = "X")
+    
+    df$overlap_time = df$overlap * df$diff_yrs
+    
+    return(df)
 }
