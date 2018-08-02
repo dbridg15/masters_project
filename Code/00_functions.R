@@ -323,6 +323,8 @@ plot_hvs <- function(hvs.rslts){
 
 ############################ overlap_time #####################################
 
+
+# this is DEFINATELY not the way to do this!
 overlap_time = function(df, cen){
     
     cen = cen[complete.cases(cen), ]
