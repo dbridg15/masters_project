@@ -6,8 +6,23 @@
 \usepackage{todonotes}
 %TC:macro \todo [ignore]
 
-\usepackage{helvet}
-\renewcommand{\familydefault}{\sfdefault}
+\usepackage{fontspec}
+\setmainfont{LiberationSerif}
+\setsansfont{LiberationSans}
+
+
+\usepackage{color}
+\newcommand{\myRule}[3][black]{\textcolor{#1}{\rule{#2}{#3}}}
+\definecolor{mygray}{gray}{0.8}
+
+\usepackage{titlesec}
+
+\titleformat{\section}
+{\normalfont\Large}{\thesection}{1em}{}[{\color{mygray}\titlerule[0.8pt]}]
+
+\titleformat{\subsection}
+{\normalfont\large}{\thesubsection}{1em}{}[]
+
 
 \usepackage{setspace}
 \usepackage{indentfirst}
@@ -32,9 +47,14 @@
 \input{Papers/Maynard2018}	
 \input{Papers/Blonder2018}
 \input{Papers/Terhi2018.tex}
-\input{Papers/sharp2018.tex}	
-		
+\input{Papers/sharp2018.tex}
+\input{Papers/Brant2016.tex}
+\input{Papers/Turner2012.tex}	
+\input{Papers/Foley2005.tex}
+
+
+\clearpage
 \bibliographystyle{agsm}
-\bibliography{thesis}
+\bibliography{../thesis}
 
 \end{document}

@@ -1,8 +1,9 @@
 \section*{N-dimensional hypervolumes to study stability of complex ecosystems \citep{Barros2016} - \textit{Read in detail!}}
 
+\subsection*{Abstract}
 Although our knowledge on the stabilising role of biodiversity and on how it is affected by perturbations has greatly improved, we still lack a comprehensive view on ecosystem stability that is transversal to different habitats and perturbations. Hence, we propose a framework that takes advantage of the multiplicity of components of an ecosystem and their contribution to stability. Ecosystem components can range from species or functional groups, to different functional traits, or even the cover of different habitats in a landscape mosaic. We make use of n-dimensional hypervolumes to define ecosystem states and assess how much they shift after environmental changes have occurred. We demonstrate the value of this framework with a study case on the effects of environmental change on Alpine ecosystems. Our results highlight the importance of a multidimensional approach when studying ecosystem stability and show that our framework is flexible enough to be applied to different types of ecosystem components, which can have impor- tant implications for the study of ecosystem stability and transient dynamics.
 
-\underline{Introduction}
+\subsection*{Introduction}
 \begin{itemize}
 	\item Ecosystem components range from species/functional groups through to habitat types and structure
 	\item Ecosystems are changing and we need to understand there responses
@@ -51,41 +52,44 @@ Although our knowledge on the stabilising role of biodiversity and on how it is 
 		\end{itemize}
 	\end{itemize}
 \end{itemize}
-\underline{The Framework!}
+
+\subsection*{The Framework!}
+\begin{itemize}
+	\item Step 1 - Choice of Components
 	\begin{itemize}
-		\item Step 1 - Choice of Components
+		\item Their example contructs n-dimensional hypervolumes in time-series of n-ecosystem traits at equilibrium.
+		\item My study will also look at space
+	\end{itemize}
+	
+	\item Step 2 - Data Treatment and Hypervolume calculation
+	\begin{itemize}
+		\item Number of dimensions must be fixed to maintain comparability
+		\item Need comparable units (centred and scaled)
+		\item Not correlated!! (Look at PCAs, PCoAs etc to get around this?)
+		\item Try not to exceed 5-8 variables to avoid disjointed and holey hypervolumes
+		\item Hypervolume calculations follow a multi-dimensional kernal density estimator procedure. See \cite{Blonder2014}   
+	\end{itemize}
+	
+	\item Step 3 - Comparing hypervolumes and analysis of community changes
+	\begin{itemize}
+		\item Sufficiently large changes in environmental conditions should produce shifts in community structure. $\Rightarrow$ These should be seen in the constructed hypervolumes...
+		\item Three possible measures
 		\begin{itemize}
-			\item Their example contructs n-dimensional hypervolumes in time-series of n-ecosystem traits at equilibrium.
-			\item My study will also look at space
+			\item Overall similarity $\Rightarrow$ Overlap
+			\item Changes in mean values of components $\Rightarrow$ Distance between centeroids
+			\item Changes in Variance $\Rightarrow$ Changes in hypervolume size 
 		\end{itemize}
-		
-		\item Step 2 - Data Treatment and Hypervolume calculation
-		\begin{itemize}
-			\item Number of dimensions must be fixed to maintain comparability
-			\item Need comparable units (centred and scaled)
-			\item Not correlated!! (Look at PCAs, PCoAs etc to get around this?)
-			\item Try not to exceed 5-8 variables to avoid disjointed and holey hypervolumes
-			\item Hypervolume calculations follow a multi-dimensional kernal density estimator procedure. See \cite{Blonder2014}   
-		\end{itemize}
-		
-		\item Step 3 - Comparing hypervolumes and analysis of community changes
-		\begin{itemize}
-			\item Sufficiently large changes in environmental conditions should produce shifts in community structure. $\Rightarrow$ These should be seen in the constructed hypervolumes...
-			\item Three possible measures
-			\begin{itemize}
-				\item Overall similarity $\Rightarrow$ Overlap
-				\item Changes in mean values of components $\Rightarrow$ Distance between centeroids
-				\item Changes in Variance $\Rightarrow$ Changes in hypervolume size 
-			\end{itemize}
-		\end{itemize}
-		
-		\item Step 4 - Complementary metrics for more detailed analysis
-		\begin{itemize}
-			\item Hypervolume comparisons don't really tell you what changed so there is  need for further analysis looking at the specific components used...
-		\end{itemize}
+	\end{itemize}
+	
+	\item Step 4 - Complementary metrics for more detailed analysis
+	\begin{itemize}
+		\item Hypervolume comparisons don't really tell you what changed so there is  need for further analysis looking at the specific components used...
+	\end{itemize}
+\end{itemize}
+
  
- \underline{Working Example}
- \begin{itemize}
+\subsection*{Working Example}
+\begin{itemize}
 		 	\item Based on simulated data (Don't really understand this!)
 		 	\item Habitats under climate change (CC) and land use change (LUC)
 		 	\item calculated hypervolume every 15 years of simulation
@@ -96,10 +100,10 @@ Although our knowledge on the stabilising role of biodiversity and on how it is 
 		 	\item hypervolume overlap was significantly affected by CC \& LUC
 		 	\item hypervolumes on traits and on Plant Functional Diversity (PFDs)
 		 	\item Trait hypervolumes tended to be smaller
- \end{itemize}
-	\end{itemize}
+\end{itemize}
+
 	 
-\underline{Discussion} 
+\subsection*{Discussion} 
 \begin{itemize}
 	\item Environmental changes impact biodiversity at many levels
 	\item Need to measure contribution of different taxanomic, functional or landscape entities
