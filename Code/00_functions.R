@@ -331,7 +331,7 @@ overlap_time = function(df, cen){
     df$X = row.names(df)
     df = merge(df, cen[ , c("X", "min", "max", "mid", "difference", "diff_yrs")], by = "X")
     
-    df$overlap_time = df$overlap * df$diff_yrs
+    df$overlap_time = df$overlap / df$diff_yrs
     
     return(df)
 }
