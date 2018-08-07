@@ -9,6 +9,8 @@
 *.blg
 *.log
 *.synctex.gz
+*.toc
+*.out
 .ropeproject/*
 Code/.ropeproject/*
 *.pdf
