@@ -24,35 +24,32 @@ def sort_data(df, census_no):  # give new column names, delete NAs and dead...
 
     # consistant and better column names
     new_Cnames = ['f_type',       # forest type
-                'plot',
-                'subplot',
-                'date',         # date of measurements
-                'observers',
-                'tag_no',
-                'd_pom',        # diameter of tree (cm)
-                'h_pom',        # height diameter is taken (m) 1.3 by default
-                'height',
-                'flag',         # condition of trees (see flag list)
-                'alive',        # 1 = yes, NaN = no
-                'stem_C',       # aboveground biomass of tree (kg)
-                'root_C',       # root biomass of tree
-                'field_cmnts',  # comments from field
-                'data_cmnts',   # comments from data entry
-                'sbplt_X',
-                'sbplt_Y',
-                'CPA',          # projected area of the crown of the stem
-                'X_FMC',        # plot level X coordinate
-                'Y_FMC',        # plot level Y coordinte
-                'Z_FMC',        # plot level elevation
-                'family',
-                'binomial',
-                'wood_density']
+                  'plot',
+                  'subplot',
+                  'date',         # date of measurements
+                  'observers',
+                  'tag_no',
+                  'd_pom',        # diameter of tree (cm)
+                  'h_pom',        # height diameter is taken (m) 1.3 by default
+                  'height',
+                  'flag',         # condition of trees (see flag list)
+                  'alive',        # 1 = yes, NaN = no
+                  'stem_C',       # aboveground biomass of tree (kg)
+                  'root_C',       # root biomass of tree
+                  'field_cmnts',  # comments from field
+                  'data_cmnts',   # comments from data entry
+                  'sbplt_X',
+                  'sbplt_Y',
+                  'CPA',          # projected area of the crown of the stem
+                  'X_FMC',        # plot level X coordinate
+                  'Y_FMC',        # plot level Y coordinte
+                  'Z_FMC',        # plot level elevation
+                  'family',
+                  'binomial',
+                  'wood_density']
 
     # give each census these column names
     df.columns = new_Cnames
-
-    # sort out dates
-    df.date = pd.to_datetime(df.date, dayfirst = True)
 
     # get unique ID - combine plot and tag_no
     df = df.assign(ID = df['plot'] + df['tag_no'].map(str))
@@ -68,6 +65,9 @@ def sort_data(df, census_no):  # give new column names, delete NAs and dead...
 
     # delete dead trees (alive == 0)
     df = df[df.alive == 1]
+
+    # sort out dates
+    df.date = pd.to_datetime(df.date, dayfirst = True)
 
     return df
 
@@ -96,12 +96,11 @@ census_3 = sort_data(census_3, 3)
 census_4 = sort_data(census_4, 4)
 
 # recombine all census data (stack on top of each other)
-frames = [census_1, census_2, census_3, census_4]
-
-tree_df = pd.concat(frames)
+tree_df = pd.concat([census_1, census_2, census_3, census_4], ignore_index = True)
 
 # add genus column
 tree_df['plot']      = tree_df['plot'].replace(" ", "", regex=True)
+tree_df['subplot']   = tree_df['subplot'].apply(lambda x: str(x).zfill(2))
 tree_df['genus']     = tree_df.apply(lambda row: row.binomial.split(" ")[0], axis = 1)
 tree_df['subplotx']  = tree_df['plot'] + "_sp" + tree_df['subplot'].astype(str)
 tree_df['subplotxc'] = tree_df['subplotx'] + "_c" + tree_df['census'].astype(str)
