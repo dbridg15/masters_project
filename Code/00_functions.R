@@ -343,59 +343,58 @@ overlap_time = function(df, cen){
 ########################### standardise_time ##################################
 
 standardise_time = function(df, axis, census_time){
-  
-  df = df[, axis]
-  
-  plts = unique(unlist(strsplit(rownames(df), "_"))[c(T, F, F)])
-  splt = unique(unlist(strsplit(rownames(df), "_"))[c(F, T, F)])
-  cens = unique(unlist(strsplit(rownames(df), "_"))[c(F, F, T)])
-  
-  raw = array(dim= c(length(splt), ncol(df), length(cens), length(plts)),
-              dimnames = list(splt, axis, cens, plts))
-  
-  adj = raw
-  
-  for (plt in plts){ for (sp in splt){ for (cen in cens){
-
-    raw[sp, , cen, plt] = unlist(df[paste(plt, sp, cen, sep = "_"), ])
-
-  }}}
-  
-  for (plt in plts){ for (pc in 1:3){ 
-
-    tmp = raw[,pc,,plt]
-    tmp = tmp[, !apply(is.na(tmp), 2, all)]
-    tmp[which(rowSums(is.na(tmp)) > 0), ] = NA
-  
-    for (c in colnames(tmp)){
-      raw[,pc,c,plt] = tmp[,c]
-    }
-  }}
-  
-  adj[,,cens[1],] = raw[,,cens[1],]
-  
-  for (plt in plts){ for (c in 2:length(cens)){
-
-    mask = census_time$plot == plt & census_time$census == cens[c]
-
-  if (sum(mask) == 0) {
-    adj[ , , cens[c], plt] = NA
-    } else {
     
-    diff_yrs = census_time[mask, "diff_yrs"]
-  
-    adj[,,cens[c], plt] = raw[,,cens[c-1], plt] +
-                          ((raw[,,cens[c], plt] - raw[,,cens[c-1], plt])*(1/diff_yrs)) 
-    }
-  }}
-  
-  adj = adply(adj, c(4, 1, 3))
-  colnames(adj)[1:3] = c('plot','subplot', 'census')
-  rownames(adj) = paste(adj$plot, adj$subplot, adj$census, sep = "_")
+    # select the axis that I want
+    df = df[, axis]
 
-  adj = adj[order(rownames(adj)), ]
-  
-  adj = na.omit(adj)
-  
-  return(adj)
+    plts = unique(unlist(strsplit(rownames(df), "_"))[c(T, F, F)])
+
+    if (exists('out')){ rm(out) }
+        
+    for (plt in plts){
+    
+        tmp1 = df[which(unlist(strsplit(rownames(df), "_"))[c(T, F, F)] == plt), ]
+
+        splt = unique(unlist(strsplit(rownames(tmp1), "_"))[c(F, T, F)])
+        cens = sort(unique(unlist(strsplit(rownames(tmp1), "_"))[c(F, F, T)]))
+
+        raw = array(dim= c(length(splt), ncol(df), length(cens)),
+              dimnames = list(splt, axis, cens))
+
+        adj = raw
+
+        for (sp in splt){ for (cen in cens){
+            raw[sp, , cen] = unlist(tmp1[paste(plt, sp, cen, sep = "_"), ])
+        }}
+
+        adj[,,cens[1]] = raw[,,cens[1]]
+
+        for (c in 2:length(cens)){
+
+            mask = census_time$plot == plt & census_time$census == cens[c]
+
+        if (sum(mask) == 0) {
+            adj[ , , cens[c]] = NA
+        } else {
+            diff_yrs = census_time[mask, "diff_yrs"]
+            adj[,,cens[c]] = raw[,,cens[c-1]] + ((raw[,,cens[c]] - raw[,,cens[c-1]])*(1/diff_yrs)) 
+        }}
+
+        adj = adply(adj, c(1, 3))
+
+        colnames(adj)[1:2] = c('subplot', 'census')
+        adj$plot      = plt
+        rownames(adj) = paste(adj$plot, adj$subplot, adj$census, sep = "_")
+
+        adj = adj[order(rownames(adj)), ]
+
+        adj = na.omit(adj)
+
+        if (exists('out')){
+            out = rbind(out, adj)
+        } else {
+            out = adj
+        }
+    }
+    return(out)
 }
