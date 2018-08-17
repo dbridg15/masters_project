@@ -264,7 +264,8 @@ hvs_rslts <- function(df, axis, what = "seq", census_time){
     if (nrow(tmp) < 2){
       hv <- NA
     } else{
-      hv <- hypervolume_gaussian(tmp, name = i, verbose = FALSE)
+      #hv <- hypervolume_gaussian(tmp, name = i, verbose = FALSE)
+      hv <- hypervolume_svm(tmp, name = i, verbose = FALSE)
     }
     
     hvlist[[i]] <- hv
@@ -368,17 +369,18 @@ standardise_time = function(df, axis, census_time){
         }}
 
         adj[,,cens[1]] = raw[,,cens[1]]
+        
+        if (length(cens) > 1){ 
+            for (c in 2:length(cens)){
 
-        for (c in 2:length(cens)){
+                mask = census_time$plot == plt & census_time$census == cens[c]
 
-            mask = census_time$plot == plt & census_time$census == cens[c]
-
-        if (sum(mask) == 0) {
-            adj[ , , cens[c]] = NA
-        } else {
-            diff_yrs = census_time[mask, "diff_yrs"]
-            adj[,,cens[c]] = raw[,,cens[c-1]] + ((raw[,,cens[c]] - raw[,,cens[c-1]])*(1/diff_yrs)) 
-        }}
+            if (sum(mask, na.rm = TRUE) == 0) {
+                adj[ , , cens[c]] = NA
+            } else {
+                diff_yrs = census_time[mask, "diff_yrs"]
+                adj[,,cens[c]] = raw[,,cens[c-1]] + ((raw[,,cens[c]] - raw[,,cens[c-1]])*(1/diff_yrs)) 
+            }}}
 
         adj = adply(adj, c(1, 3))
 
