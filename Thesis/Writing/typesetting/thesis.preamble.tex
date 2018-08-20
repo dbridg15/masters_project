@@ -7,23 +7,26 @@
 \usepackage{tocloft}
 \usepackage{hyperref}
 \usepackage{color}
+\usepackage{enumitem,kantlipsum}
+\usepackage[authoryear]{natbib}
+\usepackage{soul}
+
 
 \hypersetup{hidelinks=true}
 \usepackage{fontspec}
 \setmainfont{LiberationSerif}
 \setsansfont{LiberationSans}
 
+\renewcommand{\cftdot}{}
+\renewcommand{\cftsecleader}{\cftdotfill{\cftdotsep}}
 
 \renewcommand\contentsname{}
 
 \renewcommand\cftsecfont{\mdseries}
 \renewcommand\cftsecpagefont{\mdseries}
 
-\usepackage{etoolbox}
-\patchcmd{\thebibliography}{\section*{\refname}}{}{}{}
 
-
-\input{icthesis.sty}
+\input{typesetting/icthesis.sty}
 
 
 \newcommand{\myRule}[3][black]{\textcolor{#1}{\rule{#2}{#3}}}
@@ -32,7 +35,7 @@
 
 
 \titleformat{\section}
-{\normalfont\Large}{\thesection}{1em}{}[{\color{mygray}\titlerule[0.8pt]}]
+{\normalfont\LARGE}{\thesection}{1em}{}[{\color{mygray}\titlerule[0.8pt]}]
 
 \titleformat{\subsection}
 {\normalfont\large}{\thesubsection}{1em}{}[]

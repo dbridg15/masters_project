@@ -8,3 +8,4 @@
 rm thesis.bib
 cp ../../Documents/bibtex/APROJECT!.bib .
 mv APROJECT!.bib thesis.bib
+echo All Done, 'thesis.bib' has been updated

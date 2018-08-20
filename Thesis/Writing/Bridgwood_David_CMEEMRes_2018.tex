@@ -2,12 +2,11 @@
 \documentclass[a4paper,12pt,oneside]{article}
 \usepackage[left=2.5cm,right=2.5cm,top=2.5cm,bottom=2.5cm]{geometry}
 
-\include{thesis.preamble}
-
+\include{typesetting/thesis.preamble}
 
 \begin{document}
 
-\title{I Fucking Hate Hypervolumes!}
+\title{I Fucking Hate \emph{n}-dimensional Hypervolumes!}
 
 \author{David Bridgwood}
 \submitdate{August 2018}
@@ -20,18 +19,22 @@
 
 
 \body
+\normalsize
 \input{sections/abstract}
+\clearpage
 \input{sections/introduction}
 \input{sections/methods}
 \input{sections/results}
 \input{sections/discussion}
 
-\textbf{Is this going to work?}
 
 \clearpage
 \section{References}
-\bibliographystyle{agsm}
-\bibliography{../thesis}
+{\def\section*#1{}
+	\bibliographystyle{agsm}
+	\bibliography{../thesis}
+}
+
 
 \clearpage
 \input{sections/appendices}
