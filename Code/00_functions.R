@@ -219,11 +219,14 @@ compare_census <- function(df, hv_list, what = "seq"){
 #' returns a object of class hv.rslts with summary stats and comparisons of hypervolumes
 #' @param df a dataframe which is the axis of hypervolume as columns and plots/census as rows 
 #' @param axis - vector of axis from which to draw hypervolumes
+#' @param what - either seq - only sequenital census compared (1-2, 2-3, 3-4) or all
+#' @param census_time - dataframe with information on time differences between censuses
+#' @param - 'gaussian' or 'svm' method for building hypervolumes
 #' @export
 #' @examples
 #' hvs_rslts(df, axis = c("PC1", "PC2", "PC3"))
 
-hvs_rslts <- function(df, axis, what = "seq", census_time){
+hvs_rslts <- function(df, axis, what = "seq", census_time, method = 'gaussian'){
 
   df = standardise_time(df, axis, census_time)
   
@@ -261,11 +264,12 @@ hvs_rslts <- function(df, axis, what = "seq", census_time){
     tmp <- subset(df, plot == p & census == c,
                   select = colnames(df)[!(colnames(df) %in% c("plot", "subplot", "census"))])
 
-    if (nrow(tmp) < 2){
+    if (nrow(unique(round(tmp, 12))) < 2){
       hv <- NA
     } else{
-      #hv <- hypervolume_gaussian(tmp, name = i, verbose = FALSE)
-      hv <- hypervolume_svm(tmp, name = i, verbose = FALSE)
+      suppressWarnings(  # some sites produce warnings as they dont have quite enough data to construct hvs 
+        hv <- hypervolume(tmp, method = method, name = i, verbose = FALSE)
+      )
     }
     
     hvlist[[i]] <- hv
