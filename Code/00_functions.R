@@ -10,7 +10,8 @@ require(vegan)
 require(hypervolume)
 require(plyr)  # big dodgy that i need both...
 require(dplyr)
-
+require(codyn)
+require(reshape2)
 
 # TODO!
 # - would be nice if the hvs_rslts function could take any datframe not just
@@ -404,3 +405,44 @@ standardise_time = function(df, axis, census_time){
     }
     return(out)
 }
+
+
+############################### add_cols #####################################
+
+
+add_cols = function(df){
+    df$plot    = unlist(strsplit(rownames(df), "_"))[ c(T,F,F)]
+    df$subplot = unlist(strsplit(rownames(df), "_"))[ c(F,T,F)]
+    df$census  = unlist(strsplit(rownames(df), "_"))[ c(F,F,T)]
+    
+    return(df)
+    }
+
+
+###########################  spatial_stability ################################
+
+
+spatial_stability = function(df){
+
+    plts = unique(df$plot)
+
+    for(plt in plts){
+        a = subset(df, plot == plt)
+        a$subplot = as.numeric(as.factor(a$subplot))
+
+        if(exists('b')){
+            b = rbind(b, a)
+        } else{ b = a}
+    }
+
+    df = b
+
+    df$census = paste0(df$plot, "_", df$census)
+
+    stability = community_stability(df, 
+                                    time.var = "subplot", 
+                                    abundance.var = "value", 
+                                    replicate.var = "census")
+
+    return(stability)
+    }
