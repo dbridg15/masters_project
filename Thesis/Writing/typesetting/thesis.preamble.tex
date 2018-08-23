@@ -9,16 +9,17 @@
 \usepackage{color}
 \usepackage{enumitem,kantlipsum}
 \usepackage[authoryear]{natbib}
+\bibliographystyle{typesetting/agsm1}
 \usepackage{soul}
-
+\usepackage{amsmath}
 
 \hypersetup{hidelinks=true}
 \usepackage{fontspec}
 \setmainfont{LiberationSerif}
 \setsansfont{LiberationSans}
 
-\renewcommand{\cftdot}{}
-\renewcommand{\cftsecleader}{\cftdotfill{\cftdotsep}}
+%\renewcommand{\cftdot}{}
+%\renewcommand{\cftsecleader}{\cftdotfill{\cftdotsep}}
 
 \renewcommand\contentsname{}
 
@@ -35,7 +36,7 @@
 
 
 \titleformat{\section}
-{\normalfont\LARGE}{\thesection}{1em}{}[{\color{mygray}\titlerule[0.8pt]}]
+{\normalfont\Large}{\thesection}{1em}{}[{\color{mygray}\titlerule[1.3pt]}]
 
 \titleformat{\subsection}
 {\normalfont\large}{\thesubsection}{1em}{}[]
