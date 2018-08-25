@@ -536,9 +536,9 @@ FUNCTION {format.lab.names.abbr}
   s num.names$ 'numnames :=
   numnames #1 >
     { numnames #2 >
-	{ s #1 "{vv~}{ll}" format.name$ " et~al." * }
+	{ s #1 "{vv~}{ll}" format.name$ " \textit{et~al.}" * }
 	{ s #2 "{ff }{vv }{ll}{ jj}" format.name$ "others" =
-            { s #1 "{vv~}{ll}" format.name$ " et~al." * }
+            { s #1 "{vv~}{ll}" format.name$ " \textit{et~al.}" * }
 	    { s #1 "{vv~}{ll}" format.name$ " \harvardand\ " *
               s #2 "{vv~}{ll}" format.name$ * 
             }

@@ -1,0 +1,60 @@
+
+\section{Materials \& Methods}
+
+
+\subsection{Data Sources \& Preparation}
+
+	\textbf{Trees:}
+	\begin{itemize}
+		\item 5x5 grids
+		\item 9 plots across gradient of logging
+		\item AGB calculated as data
+		\item plots = hypervolumes
+		\item subplots = points within hypervolume
+		\item how was th data collected? \citep{Riutta2018}
+	\end{itemize}
+	
+	\textbf{Mammals:}
+	\begin{itemize}
+		\item traps act as points
+		\item totals for years (how many years?)
+		\item which plots?
+		\item AGB is closest fractal2 point by distance (where does this data come from?)
+		\item how was th data collected? \citep{Wearn2017}
+	\end{itemize}
+	
+	\textbf{Beetles:}
+	\begin{itemize}
+		\item 20 plots???? seems wrong might need to amalgamate...
+		\item traps act as points
+		\item 3 discrete censuses (when were they?)
+		\item AGB = corresponding fractal2 point (which would be closest by distance anyway) - median...
+		\item how was the data collected? ????
+	\end{itemize}
+		
+\subsection{Dimension Reduction of Community Composition}
+	Need to say why I actually did that!
+	Did it on raw abundances!
+	I did a Principal Component Analysis using the 'rda' function from the R package vegan \citep{Oksanen2018}.
+	Separate one for each taxa but all plots/subplots/traps and censuses were done together so they would be comparable.
+	Chose the top 3 principal components - somehow need to justify!
+
+	could also talk about ZIFA?
+	
+\subsection{Construction of Hypervolumes}
+	Used the R package 'hypervolumes' \citep{Blonder2017a}
+	all hypervolumes were constructed in three dimensions.
+	Briefly explain the way they are constructed! (see \cite{Blonder2014, Blonder2017b} for more details)
+
+\subsection{Comparison of Hypervolumes}
+The Jaccard similarity (Overlap) of hypervolumes was used - each census step... (census steps effectively acting repeats).
+Also centroid change...
+
+\subsection{Comparing Taxa}
+I did it...
+
+\subsection{Effect of AGB}
+I did it...
+
+\subsection{Spatial Stability}
+Was calculated for each plot/census - same Jazz...
