@@ -1,5 +1,5 @@
 require(ggplot2)
-require(gpubr)
+require(ggpubr)
 require(RColorBrewer)
 source("00_functions.R")
 
@@ -120,23 +120,24 @@ ovlp$logagb = log(ovlp$agb)
 
 
 # boxplot
-plt = ggplot(data = ovlp, aes(x = taxa, y = overlap, color = taxa, shape = taxa))
-plt = plt + geom_boxplot()
-plt = plt + geom_point(alpha = 0.5)
-plt = plt + scale_color_brewer(palette = "Set2")
-plt = plt + theme_classic()
-plt = plt + ggtitle(kind)
-print(plt)
+bx_plt = ggplot(data = ovlp, aes(x = taxa, y = overlap, color = taxa, shape = taxa))
+bx_plt = bx_plt + geom_boxplot()
+bx_plt = bx_plt + geom_point(alpha = 0.5)
+bx_plt = bx_plt + scale_color_brewer(palette = "Set2")
+bx_plt = bx_plt + theme_classic()
+bx_plt = bx_plt + theme(legend.position="none")
+bx_plt = bx_plt + xlab("Taxa") + ylab("Hypervolume Overlap")
+#print(bx_plt)
 
 
 # overlap by log(agb)
-plt = ggplot(data = ovlp, aes(x = logagb, y = overlap, color = taxa, shape = taxa))
-plt = plt + geom_point()
-#plt = plt + geom_smooth(method = 'lm', se = F)
-plt = plt + scale_color_brewer(palette = "Set2")
-plt = plt + theme_classic()
-plt = plt + ggtitle(kind)
-print(plt)
+agb_plt = ggplot(data = ovlp, aes(x = logagb, y = overlap, color = taxa, shape = taxa))
+agb_plt = agb_plt + geom_point()
+agb_plt = agb_plt + scale_color_brewer(palette = "Set2")
+agb_plt = agb_plt + theme_classic()
+agb_plt = agb_plt + theme(legend.position="bottom", legend.title = element_blank())
+agb_plt = agb_plt + xlab("log(AGB) / Mg/ha") + ylab("Hypervolume Overlap")
+#print(agb_plt)
 
 
 
@@ -194,25 +195,48 @@ stab$taxa = as.factor(stab$taxa)
 stab$agb = stab$agb*16
 stab$logagb = log(stab$agb)
 
-
 # boxplot
-plt = ggplot(data = stab, aes(x = taxa, y = stability, color = taxa))
-plt = plt + geom_boxplot()
-plt = plt + geom_point(alpha = 0.5)
-plt = plt = plt + scale_color_brewer(palette = "Set2")
-plt = plt + theme_classic()
-plt = plt + ggtitle("spatial stabilty")
-print(plt)
+sbx_plt = ggplot(data = stab, aes(x = taxa, y = stability, color = taxa, shape = taxa))
+sbx_plt = sbx_plt + geom_boxplot()
+sbx_plt = sbx_plt + geom_point(alpha = 0.5)
+sbx_plt = sbx_plt + scale_color_brewer(palette = "Set2")
+sbx_plt = sbx_plt + theme_classic()
+sbx_plt = sbx_plt + theme(legend.position="none")
+sbx_plt = sbx_plt + xlab("Taxa") + ylab("Community Spatial Stability")
+#print(sbx_plt)
 
 
-# stabiluty by log(agb)
-plt = ggplot(data = stab, aes(x = logagb, y = stability, color = taxa, shape = taxa))
-plt = plt + geom_point() 
-plt = plt + geom_smooth(method = 'lm', se = F)
-plt = plt + scale_color_brewer(palette = "Set2")
-plt = plt + theme_classic()
-plt = plt + ggtitle("spatial stability")
-print(plt)
+# overlap by log(agb)
+sagb_plt = ggplot(data = stab, aes(x = logagb, y = stability, color = taxa, shape = taxa))
+sagb_plt = sagb_plt + geom_point()
+sagb_plt = sagb_plt + scale_color_brewer(palette = "Set2")
+sagb_plt = sagb_plt + geom_smooth(method = lm, se = F, data = subset(stab, taxa == "Trees"))
+sagb_plt = sagb_plt + theme_classic()
+sagb_plt = sagb_plt + theme(legend.position="bottom", legend.title = element_blank())
+sagb_plt = sagb_plt + xlab("log(AGB) / Mg/ha") + ylab("Community Spatial Stability")
+#print(sagb_plt)
+
+
+###############################################################################
+# group plot
+###############################################################################
+
+pdf("../Thesis/Writing/figures/figure2.pdf", width =11.69, height=8.27)
+par(mar = c(0.5,1,0.5,1))
+ggarrange(bx_plt, sbx_plt, agb_plt, sagb_plt, labels = c("A", "C", "B", "D"),
+          ncol = 2, nrow = 2, hjust = -1, vjust = 2)
+dev.off()
+ 
+
+
+###############################################################################
+#
+###############################################################################
+
+
+###############################################################################
+#
+###############################################################################
 
 # compare hypervolume-overlap with spatial-stability
 
