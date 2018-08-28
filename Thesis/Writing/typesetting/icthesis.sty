@@ -7,22 +7,25 @@
 
 \def\submitdate#1{\gdef\@submitdate{#1}}
 \def\cid#1{\gdef\@cid{#1}}
+\def\wc#1{\gdef\@wc{#1}}
 
 \def\maketitle{
   \begin{titlepage}{
     \raggedright
 	\includegraphics[width=7cm]{figures/logo}
 	\myRule[mygray]{\textwidth}{2.5pt}
-    \vskip 4cm
+    \vskip 3cm
     \centering
     \Huge \@title \par
   }
   \vskip 3cm
   \par
-  {\LARGE \textbf{\@author} \vskip 2.5cm \@submitdate}
+  {\LARGE \textbf{\@author} \vskip 2cm \@submitdate}
  
+  \vspace*{2cm}
+  \large \textbf{Word Count: } \@wc
  
-  \vspace*{3cm}
+  \vspace*{1.5cm}
   \myRule[mygray]{\textwidth}{2.5pt}
   \vskip 0.5cm
   A thesis submitted in part fulfilment of the requirements for the degree of 
