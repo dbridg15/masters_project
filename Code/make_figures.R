@@ -49,7 +49,6 @@ btles_hvs_p = hvs_rslts(btles_pca@axis, axis = c("PC1", "PC2", "PC3"), "seq", bt
 # plot the things!
 ###############################################################################
 
-
 # playing around to make the plots look pretty
 plot_hvs <- function(hvs.rslts, plt){
 
@@ -65,7 +64,8 @@ plot_hvs <- function(hvs.rslts, plt){
         #show.centroid = F,
         #show.density = T,
         #cex.centroid  = 2,
-        #cex.random    = 0.3,
+        cex.random    = 0.3,
+        cex.centroid  = 2.5,
         cex.data      = 1,
         cex.axis      = 1,
         point.dark.factor = 0.2,
@@ -74,7 +74,13 @@ plot_hvs <- function(hvs.rslts, plt){
 }
 
 
+pdf("../Thesis/Writing/figures/figure1a.pdf", width = 10, height = 10)
 plot_hvs(trees_hvs_p, "Belian")
+dev.off()
+
+pdf("../Thesis/Writing/figures/figure1b.pdf", width = 10, height = 10)
+plot_hvs(btles_hvs_p, "D")
+dev.off()
 
 
 ##############################################################################3
