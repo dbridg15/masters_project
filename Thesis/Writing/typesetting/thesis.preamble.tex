@@ -18,6 +18,7 @@
 \usepackage[normalem]{ulem}
 \useunder{\uline}{\ul}{}
 \usepackage{rotating}
+\usepackage{adjustbox}
 
 
 \hypersetup{hidelinks=true}
@@ -42,6 +43,12 @@
 \newcommand{\myRule}[3][black]{\textcolor{#1}{\rule{#2}{#3}}}
 \definecolor{mygray}{gray}{0.8}
 
+\newcommand{\beginsupplement}{%
+	\setcounter{table}{0}
+	\renewcommand{\thetable}{S\arabic{table}}%
+	\setcounter{figure}{0}
+	\renewcommand{\thefigure}{S\arabic{figure}}%
+}
 
 
 \titleformat{\section}
