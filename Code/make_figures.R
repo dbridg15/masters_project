@@ -166,18 +166,13 @@ btles = melt(btles_df, id.vars=c("plot", "subplot", "census"))
 
 
 # calculate stability
-trees_stb = spatial_stability(trees)
-mamls_stb = spatial_stability(mamls)
-btles_stb = spatial_stability(btles)
+trees_stb = temporal_stability(trees)
+mamls_stb = temporal_stability(mamls)
+btles_stb = temporal_stability(btles)
 
 trees_stb$taxa = "Trees"
 mamls_stb$taxa = "Mammals"
 btles_stb$taxa = "Beetles"
-
-trees_stb$plot = unlist(strsplit(trees_stb$census, "_"))[ c(T,F)]
-mamls_stb$plot = unlist(strsplit(mamls_stb$census, "_"))[ c(T,F)]
-btles_stb$plot = unlist(strsplit(btles_stb$census, "_"))[ c(T,F)]
-
 
  #merge with agb
 trees_agb = read.csv("../Results/trees_agb.csv")
@@ -201,6 +196,8 @@ stab$taxa = as.factor(stab$taxa)
 stab$agb = stab$agb*16
 stab$logagb = log(stab$agb)
 
+stab$stability = log(stab$stability)
+
 # boxplot
 sbx_plt = ggplot(data = stab, aes(x = taxa, y = stability, color = taxa, shape = taxa))
 sbx_plt = sbx_plt + geom_boxplot()
@@ -208,7 +205,7 @@ sbx_plt = sbx_plt + geom_point(alpha = 0.5)
 sbx_plt = sbx_plt + scale_color_brewer(palette = "Set2")
 sbx_plt = sbx_plt + theme_classic()
 sbx_plt = sbx_plt + theme(legend.position="none")
-sbx_plt = sbx_plt + xlab("Taxa") + ylab("Community Spatial Stability")
+sbx_plt = sbx_plt + xlab("Taxa") + ylab("log(Community Temporal Stability)")
 #print(sbx_plt)
 
 
@@ -219,7 +216,7 @@ sagb_plt = sagb_plt + scale_color_brewer(palette = "Set2")
 sagb_plt = sagb_plt + geom_smooth(method = lm, se = F, data = subset(stab, taxa == "Trees"))
 sagb_plt = sagb_plt + theme_classic()
 sagb_plt = sagb_plt + theme(legend.position="bottom", legend.title = element_blank())
-sagb_plt = sagb_plt + xlab("log(AGB) / Mg/ha") + ylab("Community Spatial Stability")
+sagb_plt = sagb_plt + xlab("log(AGB) / Mg/ha") + ylab("log(Community Spatial Stability)")
 #print(sagb_plt)
 
 
