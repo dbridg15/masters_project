@@ -446,3 +446,31 @@ spatial_stability = function(df){
 
     return(stability)
     }
+
+
+####################### temporal_stability ####################################
+
+
+temporal_stability = function(df){
+
+    plts = unique(df$plot)
+
+    for(plt in plts){
+        a = subset(df, plot == plt)
+        a$census = as.numeric(as.factor(a$census))
+
+        if(exists('b')){
+            b = rbind(b, a)
+        } else{ b = a}
+    }
+
+    df = b
+
+    stability = community_stability(df, 
+                                    time.var = "census", 
+                                    abundance.var = "value", 
+                                    replicate.var = "plot")
+
+    return(stability)
+    }
+
