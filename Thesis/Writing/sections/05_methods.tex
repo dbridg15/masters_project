@@ -21,7 +21,7 @@
 		
 \subsection{Dimension Reduction and Hypervolume Calculation}
 	
-	
+	\subsubsection*{Principal Component Analysis}
     To reduce the data to an appropriate number of dimensions for hypervolume calculation and establish orthogonality, I carried out Principal Component Analysis (PCA). This was performed on the raw abundance data for each taxa separately but with all subplots and censuses included, allowing hypervolumes constructed from subsets of the output to be comparable. The PCA was performed using the `rda' function from the R package vegan \citep{Oksanen2018}.	
 	
 	Before hypervolumes were calculated, points from the PCA output were adjusted so all census steps would be standardised to one year. The trajectory of each point between censuses was determined and the points position at time = one year calculated and used as the point for census n + 1. Time between censuses was defined as the middle day of census two minus the middle day of census one, measured in years.
@@ -44,7 +44,7 @@ Comparisons were carried out between census steps for hypervolumes from the same
 A analysis of covariance (ANCOVA) was performed to see if the response to AGB (slope) differed between the taxa (if there was an interaction), and whether the taxa themselves also differed significantly in their average hypervolume overlap.
 
 
-\subsection{Spatial Stability}
-A more traditional measure of stability was calculated, modifying the community temporal stability equation to look at spatial stability. Using subplots and traps as described above this measure was calculated for each plot and census, assessing the stability between subplots/traps of the same plot. An ANCOVA was again performed to  establish any effect of taxa or AGB on this measure of stability. 
+\subsection{Temporal Stability}
+A more traditional measure of stability was calculated, using the community temporal stability equation (equation \ref{equ:temporal_stability}). Using subplots and traps as described above this . An ANCOVA was again performed to  establish any effect of taxa or AGB on this measure of stability. 
 
-A Pearson's correlation was performed on hypervolume overlap and spatial stability to see if a relationship between these two measures of stability existed, overall and within each taxonomic group. 
+A Pearson's correlation was performed on hypervolume overlap and temporal stability to see if a relationship between these two measures of stability existed, overall and within each taxonomic group. 

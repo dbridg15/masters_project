@@ -3,6 +3,7 @@ require(ggpubr)
 require(RColorBrewer)
 source("00_functions.R")
 
+set.seed(111)
 
 ###############################################################################
 # read in data
@@ -82,6 +83,7 @@ pdf("../Thesis/Writing/figures/figure1b.pdf", width = 10, height = 10)
 plot_hvs(btles_hvs_p, "D")
 dev.off()
 
+dev.off()
 
 ##############################################################################3
 # overlap
@@ -139,6 +141,7 @@ bx_plt = bx_plt + xlab("Taxa") + ylab("Hypervolume Overlap")
 # overlap by log(agb)
 agb_plt = ggplot(data = ovlp, aes(x = logagb, y = overlap, color = taxa, shape = taxa))
 agb_plt = agb_plt + geom_point()
+agb_plt = agb_plt + geom_smooth(method = 'lm', se = F)
 agb_plt = agb_plt + scale_color_brewer(palette = "Set2")
 agb_plt = agb_plt + theme_classic()
 agb_plt = agb_plt + theme(legend.position="bottom", legend.title = element_blank())
@@ -213,10 +216,10 @@ sbx_plt = sbx_plt + xlab("Taxa") + ylab("log(Community Temporal Stability)")
 sagb_plt = ggplot(data = stab, aes(x = logagb, y = stability, color = taxa, shape = taxa))
 sagb_plt = sagb_plt + geom_point()
 sagb_plt = sagb_plt + scale_color_brewer(palette = "Set2")
-sagb_plt = sagb_plt + geom_smooth(method = lm, se = F, data = subset(stab, taxa == "Trees"))
+sagb_plt = sagb_plt + geom_smooth(method = 'lm', se = F)
 sagb_plt = sagb_plt + theme_classic()
 sagb_plt = sagb_plt + theme(legend.position="bottom", legend.title = element_blank())
-sagb_plt = sagb_plt + xlab("log(AGB) / Mg/ha") + ylab("log(Community Spatial Stability)")
+sagb_plt = sagb_plt + xlab("log(AGB) / Mg/ha") + ylab("log(Community Temporal Stability)")
 #print(sagb_plt)
 
 
@@ -251,13 +254,13 @@ b = stab %>%
 
 c = merge(a, b, by = c("plot", "taxa"))
 
-plt = ggplot(data = c, aes(x = overlap, y = stability, color = taxa, shape = taxa))
-plt = plt + geom_point()
+plt = ggplot(data = c, aes(x = overlap, y = stability))
+plt = plt + geom_point(aes(color = taxa, shape = taxa))
 plt = plt + scale_color_brewer(palette = "Set2")
 plt = plt + theme_classic()
 plt = plt + theme(legend.position = "bottom", legend.title = element_blank())
-plt = plt + xlab("Hypervolume Overlap") + ylab("Community Spatial Stability")
+plt = plt + xlab("Hypervolume Overlap") + ylab("log(Community Temporal Stability)")
 
-pdf("../Thesis/Writing/figures/figure3.pdf", width = 8, height = 6)
+pdf("../Thesis/Writing/figures/figure3.pdf", width = 8, height = 4)
 print(plt)
 dev.off()
