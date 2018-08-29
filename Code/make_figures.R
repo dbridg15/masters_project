@@ -256,5 +256,11 @@ c = merge(a, b, by = c("plot", "taxa"))
 
 plt = ggplot(data = c, aes(x = overlap, y = stability, color = taxa, shape = taxa))
 plt = plt + geom_point()
-plt = plt + geom_smooth(method = 'lm', se = F)
+plt = plt + scale_color_brewer(palette = "Set2")
+plt = plt + theme_classic()
+plt = plt + theme(legend.position = "bottom", legend.title = element_blank())
+plt = plt + xlab("Hypervolume Overlap") + ylab("Community Spatial Stability")
+
+pdf("../Thesis/Writing/figures/figure3.pdf", width = 8, height = 6)
 print(plt)
+dev.off()

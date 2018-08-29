@@ -8,43 +8,43 @@
 
 	\subsubsection*{Trees}
 	
-	All plots had a total area of 1 ha, split into 25 subplots each $\text{20m} \times \text{20m}$. Plots were censused at least twice with the majority having four censuses between 2011 and 2016. At each census all trees with stem diameter >10 cm at 1.3m height were identified to species level, diameter was measured and height estimated \citep{Riutta2018}. From these measurements aboveground biomass (AGB) of each tree was predicted from allometric equations for moist tropical forest \citep{Chave2005}. From this data I created a species by subplot-census matrix, where each subplot would act as a unique point in the construction of hypervolumes. The AGB from the data was used as the score for each plot, taking the median of subplots.
+	All plots had a total area of 1 ha, split into 25 subplots each $\text{20m} \times \text{20m}$. Plots were censused at least twice with the majority having four censuses between 2011 and 2016. At each census all trees with a stem diameter >10 cm at 1.3m height were identified to species level, diameter was measured and height estimated \citep{Riutta2018}. From these measurements aboveground biomass (AGB) of each tree was predicted using allometric equations for moist tropical forest \citep{Chave2005}. From this data I created a species by subplot-census matrix, where each subplot would act as a unique point in the construction of hypervolumes. An AGB score was calculated for each plot from the data, taking the median total AGB of each subplot in the given plot.
 
 	\subsubsection*{Mammals}
 	
-	For a detailed description of small-mammal trapping at SAFE see \cite{Wearn2017} and \cite{Chapman2018}. In summary plots were split into 6 grids each with 48 trapping locations spaced 23m apart. In each census year each trapping location was sampled on 7 consecutive nights, with two traps set at each trap location. Mammals were identified to species level, tagged, aged and sexed. For the purpose of my analysis I summed each trap location for each year, creating a species by trap-year matrix, where each trap acts as a unique point in the construction of the hypervolumes. AGB measures exist at all 2\textsuperscript{nd} order sampling points of SAFE \citep{Pfeifer2016}, each mammal trap was assigned the value of the closest 2\textsuperscript{nd} order site with the AGB score of each plot calculated as the median for all traps.
+	For a detailed description of small-mammal trapping at SAFE see \cite{Wearn2017} and \cite{Chapman2018}. In summary plots were split into 6 grids each with 48 trapping locations spaced 23m apart. In each census year, trapping locations were sampled on 7 consecutive nights, with two traps set at each trap location. Mammals were identified to species level, tagged, aged and sexed. For the purpose of my analysis I summed each trap location for each year, creating a species by trap-year matrix, where each trap acts as a unique point in the construction of the hypervolumes and each year a separate census period. AGB measures exist at all 2\textsuperscript{nd} order sampling points of SAFE \citep{Pfeifer2016}, each mammal trap was assigned the value of the closest 2\textsuperscript{nd} order site with the AGB score of each plot calculated as the median for all traps within the plot.
 	
 	
 	\subsubsection*{Beetles}
 	
-	Beetles were sampled at the 1\textsuperscript{st} fractal order sites of SAFE with a combination trap (pitfall, flight-interception, malaise) left for 3 days and identified to family level \hl{(citation would be great)}. Each trap location was censused in at least two discrete time-points and for this analysis each trap acts as a unique point in the construction of the hypervolumes. The AGB score for these was calculated by assigning each sampling site with its corresponding 2\textsuperscript{nd} order AGB measurement, then taking the median of all these traps.
+	Beetles were sampled at the 1\textsuperscript{st} fractal order sites of SAFE with a combination trap (pitfall, flight-interception, malaise) left for 3 days and identified to family level. Each trap location was censused at a minimum of two discrete time-points and for this analysis each trap acts as a unique point in the construction of the hypervolumes. The AGB score for beetles plots was calculated by assigning each sampling site with its corresponding 2\textsuperscript{nd} order AGB measurement, then taking the median of all traps.
 		
 \subsection{Dimension Reduction and Hypervolume Calculation}
 	
 	
-    To reduce the data to an appropriate number of dimensions for hypervolume calculation and establish orthogonality, I carried out Principal Component Analysis (PCA). This was performed on the raw abundance data for each taxa separately but with all subplots and censuses included, allowing hypervolumes constructed from subsets of the output to be comparable. The PCA was performed using the 'rda' function from the R package vegan \citep{Oksanen2018}.	
+    To reduce the data to an appropriate number of dimensions for hypervolume calculation and establish orthogonality, I carried out Principal Component Analysis (PCA). This was performed on the raw abundance data for each taxa separately but with all subplots and censuses included, allowing hypervolumes constructed from subsets of the output to be comparable. The PCA was performed using the `rda' function from the R package vegan \citep{Oksanen2018}.	
 	
-	Before hypervolumes were calculated, points from the PCA output were adjusted so all census steps would be standardised to one-year. The trajectory of each point between censuses was determined and the points position at time = 1 year calculated and used to construct hypervolumes for census n + 1. Time between censuses was defined as the middle day of census two minus the middle day of census one.
+	Before hypervolumes were calculated, points from the PCA output were adjusted so all census steps would be standardised to one year. The trajectory of each point between censuses was determined and the points position at time = one year calculated and used as the point for census n + 1. Time between censuses was defined as the middle day of census two minus the middle day of census one, measured in years.
 	
 	\subsubsection*{Construction of Hypervolumes}
-	Hypervolumes were constructed using the R package 'hypervolumes' \citep{Blonder2017a}. This uses a Gaussian kernel density estimation to delineate n-dimensional hypervolumes. See \cite{Blonder2014, Blonder2017b} for a detailed description of the algorithms, but in brief
+	Hypervolumes were constructed using the R package 'hypervolumes' \citep{Blonder2017a}. This uses a Gaussian kernel density estimation to delineate \emph{n}-dimensional hypervolumes. See \cite{Blonder2014, Blonder2017b} for a detailed description of the algorithms, but in brief
 	\begin{enumerate*}[label=(\roman*)]
 		\item random points are drawn from hyperellipses surrounding each observation
 		\item a uniform density is formed by resampling these points
-		\item kernel density estimate was calculated at each random point
-		\item the hypervolume is then defined by those points above a threshold value.
+		\item kernel density estimate is calculated at each random point
+		\item the hypervolume is then defined by those points which fall above a threshold value.
 	\end{enumerate*}  
 		
 	For trees, subplots acted as individual observations, while traps were used for mammals and beetles, from these observations seperate volumes were delineated for each plot and census, after time steps were standardised to one year. All hypervolumes were constructed using the first three principal components from the PCA, this was due to data constraints as increasing the number of dimensions quickly leads to disjunct hypervolumes, \cite{Blonder2017b} suggest the maximum number of dimensions should not exceed $\ln m$ where $m$ is the number of observations from which the hypervolume is constructed.
 
 \subsection{Comparison of Hypervolumes and Effect of Above Ground Biomass}
 
-Comparisons were carried out between census steps for hypervolumes of the same plots to assess the variation in community composition through time. A measure of overlap, the Jaccard Similarity (volume of intersection divided by volume of union) and the distance between hypervolume centroids was used. Both were calculated using functions from the hypervolumes package \citep{Blonder2017a}.
+Comparisons were carried out between census steps for hypervolumes from the same plots to assess the variation in community composition through time. A measure of overlap, the Jaccard Similarity (volume of intersection divided by volume of union) and the distance between hypervolume centroids was used. Both were calculated using functions from the hypervolumes package \citep{Blonder2017a}.
 
 A two-way analysis of variance (ANOVA) was performed to establish if there was an effect of taxa or AGB on the measure of overlap, and if there was an interaction between these variables.
 
 
 \subsection{Spatial Stability}
-A more traditional measure of stability was calculated, modifying the community temporal stability equation to look at spatial stability. Using subplots/traps as described above this measure was calculated for each plot and census. A two way ANOVA was again performed to  establish any effect of taxa or plot AGB on this measure of stability. 
+A more traditional measure of stability was calculated, modifying the community temporal stability equation to look at spatial stability. Using subplots and traps as described above this measure was calculated for each plot and census, assessing the stability between subplots/traps of the same plot. A two way ANOVA was again performed to  establish any effect of taxa or plot AGB on this measure of stability. 
 
-These two measures of stability were than compared to see if a correlation existed between them.
+A Pearson's correlation was performed on hypervolume overlap and spatial stability to see if a relationship between these two measures of stability existed, overall and within each taxonomic group. 
