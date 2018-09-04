@@ -83,7 +83,6 @@ pdf("../Thesis/Writing/figures/figure1b.pdf", width = 10, height = 10)
 plot_hvs(btles_hvs_p, "D")
 dev.off()
 
-dev.off()
 
 ##############################################################################3
 # overlap
@@ -252,9 +251,9 @@ a = ovlp %>%
 b = stab %>% 
 	group_by(plot, taxa) %>% summarise(stability = mean(stability))
 
-c = merge(a, b, by = c("plot", "taxa"))
+ovlp_v_stab = merge(a, b, by = c("plot", "taxa"))
 
-plt = ggplot(data = c, aes(x = overlap, y = stability))
+plt = ggplot(data = ovlp_v_stab, aes(x = overlap, y = stability))
 plt = plt + geom_point(aes(color = taxa, shape = taxa))
 plt = plt + scale_color_brewer(palette = "Set2")
 plt = plt + theme_classic()
@@ -264,3 +263,17 @@ plt = plt + xlab("Hypervolume Overlap") + ylab("log(Community Temporal Stability
 pdf("../Thesis/Writing/figures/figure3.pdf", width = 8, height = 4)
 print(plt)
 dev.off()
+
+
+
+###############################################################################
+# Save the output to RDA
+###############################################################################
+
+save(trees_df,    mamls_df,    btles_df,
+     trees_cen,   mamls_cen,   btles_cen,
+     trees_pca,   mamls_pca,   btles_pca,
+     trees_hvs_p, mamls_hvs_p, btles_hvs_p,
+     trees_agb,   mamls_agb,   btles_agb,
+     trees_stb,   mamls_stb,   btles_stb,
+     stab, ovlp_v_stab, file = "../Results/plots/outputs_for_pres_plts.rda")
