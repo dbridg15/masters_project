@@ -5,6 +5,9 @@ source("00_functions.R")
 
 load("../Results/plots/outputs_for_pres_plts.rda")
 
+###############################################################################
+# functions
+###############################################################################
 
 plot_hvs <- function(hvs.rslts, plt){
 
@@ -34,34 +37,54 @@ plot_hvs <- function(hvs.rslts, plt){
 }
 
 
-plot_hvs(trees_hvs_p, "Belian")
+movie3d <- function(f, duration, dev = rgl.cur(), ..., fps=10, 
+                    movie = "movie", frames = movie, dir = tempdir(), 
+                    convert = NULL, clean = TRUE, verbose=TRUE,
+                    top = TRUE, type = "gif", startTime = 0) {
+    
+    #olddir <- setwd(dir)
+    #on.exit(setwd(olddir))
+    olddir <- getwd()
 
-
-plot_hvs(btles_hvs_p, "D")
-
-hypervolume_save_animated_gif(file.name = "test", directory.output = "../Results/plots/")
-
-
-play3d(spin3d(axis=c(1, 1, 0)))
-
-movie3d(spin3d(axis=c(1, 1, 0) , rpm = 4), duration = 15, fps = 10, 
-                    movie = "movie", dir = "../Results/plots/", clean = F)
-
-rgl.snapshot("../Results/plots/test.png")
-
-hypervolume_save_animated_gif <- function(image.size=400, axis=c(0,0,1),
-                                          rpm=4,duration=15,fps=10,
-                                          file.name='movie',directory.output='.',...)
-{
-  td = tempdir()
-  tf = basename(tempfile(tmpdir=td))
-  
-  rgl::par3d(windowRect=c(100,100,500,500))
-  rgl::movie3d(spin3d(axis=axis,rpm=rpm),duration=duration,fps=fps,movie=tf,dir=td,...)
-  
-  if(!file.exists(directory.output))
-  {
-    dir.create(directory.output)
-  }
-  file.rename(sprintf("%s.gif",file.path(td,tf)),file.path(directory.output,sprintf("%s.gif",file.name)))
+    for (i in round(startTime*fps):(duration*fps)) {
+	time <- i/fps        
+	if(rgl.cur() != dev) rgl.set(dev)
+	stopifnot(rgl.cur() != 0)
+	args <- f(time, ...)
+	subs <- args$subscene
+	if (is.null(subs))
+	    subs <- currentSubscene3d(dev)
+	else
+	    args$subscene <- NULL
+	for (s in subs)
+	    par3d(args, subscene = s)
+	filename <- sprintf("%s%03d.png",frames,i)
+	if (verbose) {
+	    cat(gettextf("Writing '%s'\r", filename))
+	    flush.console()
+	}
+        rgl.snapshot(filename=filename, fmt="png", top=top)
+    }
+  setwd(olddir) 
+  system(paste("bash make_mpeg.sh", name, name))
 }
+
+
+
+make_movie <- function(hvs.rslts, plt, axis, image.size, rpm, dir, fps,
+                       duration, name){
+
+  plot_hvs(hvs.rslts = hvs.rslts, plt = plt)
+  par3d(windowRect=c(0,0,image.size,image.size))
+  movie3d(spin3d(axis=axis,rpm=rpm), duration = duration, fps = fps, movie = name,
+          frames = name, dir = dir, clean = FALSE)
+
+}
+ 
+
+###############################################################################
+# plots
+###############################################################################
+
+make_movie(trees_hvs_p, "Belian", axis = c(1, 1, 0), image.size = 1200, rpm = 4,
+           dir = "../Results/plots/frames", fps = 20, duration = 15, name = "trees_belian")
