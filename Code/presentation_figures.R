@@ -19,21 +19,18 @@ plot_hvs <- function(hvs.rslts, plt){
 
     plot(hvlist,
         show.3d = T,
-        #contour.lwd    = 1,
-        #contour.type   = "kde",
-        #show.centroid = T,
-        #show.density = T,
-        #show.random   = T,
+        show.axes = F,
+        show.frame = F,
+        show.legend = F,
+        names = c("","",""),
         cex.random     = 5,
         show.density   = T,
         point.alpha.min = 0.8,
         cex.centroid   = 300,
         cex.data       = 100,
-        #cex.axis      = 1,
         point.dark.factor = 0,
         colors = brewer.pal(max(c(length(match_plt), 3)), "Set2")
         )
-    return(hvlist)
 }
 
 
@@ -42,9 +39,9 @@ movie3d <- function(f, duration, dev = rgl.cur(), ..., fps=10,
                     convert = NULL, clean = TRUE, verbose=TRUE,
                     top = TRUE, type = "gif", startTime = 0) {
     
-    #olddir <- setwd(dir)
-    #on.exit(setwd(olddir))
-    olddir <- getwd()
+    orgdir <- getwd()
+    olddir <- setwd(dir)
+    on.exit(setwd(olddir))
 
     for (i in round(startTime*fps):(duration*fps)) {
 	time <- i/fps        
@@ -65,8 +62,8 @@ movie3d <- function(f, duration, dev = rgl.cur(), ..., fps=10,
 	}
         rgl.snapshot(filename=filename, fmt="png", top=top)
     }
-  setwd(olddir) 
-  system(paste("bash make_mpeg.sh", name, name))
+  setwd(orgdir) 
+  system(paste("bash make_mpeg.sh", movie, movie))
 }
 
 
@@ -86,5 +83,11 @@ make_movie <- function(hvs.rslts, plt, axis, image.size, rpm, dir, fps,
 # plots
 ###############################################################################
 
-make_movie(trees_hvs_p, "Belian", axis = c(1, 1, 0), image.size = 1200, rpm = 4,
+make_movie(trees_hvs_p, "Belian", axis = c(1, 1, 1), image.size = 1200, rpm = 4,
            dir = "../Results/plots/frames", fps = 20, duration = 15, name = "trees_belian")
+
+make_movie(btles_hvs_p, "D", axis = c(1, 1, 0), image.size = 1200, rpm = 4,
+           dir = "../Results/plots/frames", fps = 20, duration = 15, name = "btles_D")
+
+
+
