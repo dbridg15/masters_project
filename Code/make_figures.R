@@ -134,7 +134,7 @@ bx_plt = bx_plt + scale_color_brewer(palette = "Set2")
 bx_plt = bx_plt + theme_classic()
 bx_plt = bx_plt + theme(legend.position="none")
 bx_plt = bx_plt + xlab("Taxa") + ylab("Hypervolume Overlap")
-#print(bx_plt)
+print(bx_plt)
 
 
 # overlap by log(agb)
@@ -276,4 +276,4 @@ save(trees_df,    mamls_df,    btles_df,
      trees_hvs_p, mamls_hvs_p, btles_hvs_p,
      trees_agb,   mamls_agb,   btles_agb,
      trees_stb,   mamls_stb,   btles_stb,
-     stab, ovlp_v_stab, file = "../Results/plots/outputs_for_pres_plts.rda")
+     ovlp, stab, ovlp_v_stab, file = "../Results/plots/outputs_for_pres_plts.rda")
