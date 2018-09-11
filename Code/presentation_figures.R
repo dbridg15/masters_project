@@ -145,18 +145,33 @@ dev.off()
 # actual proper plots
 ###############################################################################
 
+s1 = 16  # axis and legend
+s2 = 18  # axis title
+m1 = 20  # x axis margin (title to axis numbers)
+m2 = 20  # y axis margin (title to axis numbers)
+m3 = 24  # spacing between legend elements
+p1 = 3   # point sizes
+l1 = 2   # line widths
+l2 = 1   # axis line
+l3 = 1.5 # axis ticks width
+l4 = 10  # axis ticks length
+text_col = "#404040"
+
 # boxplot
 bx_plt = ggplot(data = ovlp, aes(x = taxa, y = overlap, color = taxa, shape = taxa))
 bx_plt = bx_plt + geom_boxplot()
-bx_plt = bx_plt + geom_point(size = 2)
+bx_plt = bx_plt + geom_point(size = p1)
 bx_plt = bx_plt + scale_color_brewer(palette = "Set2")
 bx_plt = bx_plt + theme_classic()
-bx_plt = bx_plt + theme(legend.title     = element_blank(),
-                        legend.position  = "bottom",
-                        axis.text        = element_text(size = 14),
-                        axis.title.x     = element_text(size = 16, margin = margin(t = 20, unit = "pt")),
-                        axis.title.y     = element_text(size = 16, margin = margin(r = 20, unit = "pt")),
-                        legend.text      = element_text(size = 14, margin = margin(r = 24, unit = "pt")))
+bx_plt = bx_plt + theme(legend.title      = element_blank(),
+                        legend.position   = "bottom",
+                        axis.text         = element_text(size = s1, color = text_col),
+                        axis.title.x      = element_text(size = s2, margin = margin(t = m1, unit = "pt"), color = text_col),
+                        axis.title.y      = element_text(size = s2, margin = margin(r = m2, unit = "pt"), color = text_col),
+                        legend.text       = element_text(size = s1, margin = margin(r = m3, unit = "pt"), color = text_col),
+                        axis.line         = element_line(size = l2, color = text_col),
+                        axis.ticks        = element_line(size = l3, color = text_col),
+                        axis.ticks.length = unit(l4, "pt"))
 bx_plt = bx_plt + xlab("Taxa") + ylab("Hypervolume Overlap")
 
 svg("../Results/plots/overlap_box.svg", width = 16, height = 9)
@@ -165,16 +180,19 @@ dev.off()
 
 # overlap by log(agb)
 agb_plt = ggplot(data = ovlp, aes(x = logagb, y = overlap, color = taxa, shape = taxa))
-agb_plt = agb_plt + geom_point(size = 2)
-agb_plt = agb_plt + geom_smooth(method = 'lm', se = F)
+agb_plt = agb_plt + geom_point(size = p1)
+agb_plt = agb_plt + geom_smooth(method = 'lm', se = F, lwd = l1)
 agb_plt = agb_plt + scale_color_brewer(palette = "Set2")
 agb_plt = agb_plt + theme_classic()
-agb_plt = agb_plt + theme(legend.title     = element_blank(),
-                          legend.position  = "bottom",
-                          axis.text        = element_text(size = 14),
-                          axis.title.x     = element_text(size = 16, margin = margin(t = 20, unit = "pt")),
-                          axis.title.y     = element_text(size = 16, margin = margin(r = 20, unit = "pt")),
-                          legend.text      = element_text(size = 14, margin = margin(r = 24, unit = "pt")))
+agb_plt = agb_plt + theme(legend.title      = element_blank(),
+                          legend.position   = "bottom",
+                          axis.text         = element_text(size = s1, color = text_col),
+                          axis.title.x      = element_text(size = s2, margin = margin(t = m1, unit = "pt"), color = text_col),
+                          axis.title.y      = element_text(size = s2, margin = margin(r = m2, unit = "pt"), color = text_col),
+                          legend.text       = element_text(size = s1, margin = margin(r = m3, unit = "pt"), color = text_col),
+                          axis.line         = element_line(size = l2, color = text_col),
+                          axis.ticks        = element_line(size = l3, color = text_col),
+                          axis.ticks.length = unit(l4, "pt"))
 agb_plt = agb_plt + xlab("log(AGB) / Mg/ha") + ylab("Hypervolume Overlap")
 
 svg("../Results/plots/overlap_agb.svg", width = 16, height = 9)
@@ -184,15 +202,18 @@ dev.off()
 # boxplot
 sbx_plt = ggplot(data = stab, aes(x = taxa, y = stability, color = taxa, shape = taxa))
 sbx_plt = sbx_plt + geom_boxplot()
-sbx_plt = sbx_plt + geom_point(size = 2)
+sbx_plt = sbx_plt + geom_point(size = p1)
 sbx_plt = sbx_plt + scale_color_brewer(palette = "Set2")
 sbx_plt = sbx_plt + theme_classic()
-sbx_plt = sbx_plt + theme(legend.title     = element_blank(),
-                          legend.position  = "bottom",
-                          axis.text        = element_text(size = 14),
-                          axis.title.x     = element_text(size = 16, margin = margin(t = 20, unit = "pt")),
-                          axis.title.y     = element_text(size = 16, margin = margin(r = 20, unit = "pt")),
-                          legend.text      = element_text(size = 14, margin = margin(r = 24, unit = "pt")))
+sbx_plt = sbx_plt + theme(legend.title      = element_blank(),
+                          legend.position   = "bottom",
+                          axis.text         = element_text(size = s1, color = text_col),
+                          axis.title.x      = element_text(size = s2, margin = margin(t = m1, unit = "pt"), color = text_col),
+                          axis.title.y      = element_text(size = s2, margin = margin(r = m2, unit = "pt"), color = text_col),
+                          legend.text       = element_text(size = s1, margin = margin(r = m3, unit = "pt"), color = text_col),
+                          axis.line         = element_line(size = l2, color = text_col),
+                          axis.ticks        = element_line(size = l3, color = text_col),
+                          axis.ticks.length = unit(l4, "pt"))
 sbx_plt = sbx_plt + xlab("Taxa") + ylab("log(Community Temporal Stability)")
   
 svg("../Results/plots/stability_overlap_box.svg", width = 16, height = 9)
@@ -201,16 +222,19 @@ dev.off()
 
 # overlap by log(agb)
 sagb_plt = ggplot(data = stab, aes(x = logagb, y = stability, color = taxa, shape = taxa))
-sagb_plt = sagb_plt + geom_point(size = 2)
+sagb_plt = sagb_plt + geom_point(size = p1)
 sagb_plt = sagb_plt + scale_color_brewer(palette = "Set2")
-sagb_plt = sagb_plt + geom_smooth(method = 'lm', se = F)
+sagb_plt = sagb_plt + geom_smooth(method = 'lm', se = F, lwd = l1)
 sagb_plt = sagb_plt + theme_classic()
 sagb_plt = sagb_plt + theme(legend.title     = element_blank(),
-                           legend.position  = "bottom",
-                           axis.text        = element_text(size = 14),
-                           axis.title.x     = element_text(size = 16, margin = margin(t = 20, unit = "pt")),
-                           axis.title.y     = element_text(size = 16, margin = margin(r = 20, unit = "pt")),
-                           legend.text      = element_text(size = 14, margin = margin(r = 24, unit = "pt")))
+                           legend.position   = "bottom",
+                           axis.text         = element_text(size = s1, color = text_col),
+                           axis.title.x      = element_text(size = s2, margin = margin(t = m1, unit = "pt"), color = text_col),
+                           axis.title.y      = element_text(size = s2, margin = margin(r = m2, unit = "pt"), color = text_col),
+                           legend.text       = element_text(size = s1, margin = margin(r = m3, unit = "pt"), color = text_col),
+                           axis.line         = element_line(size = l2, color = text_col),
+                           axis.ticks        = element_line(size = l3, color = text_col),
+                           axis.ticks.length = unit(l4, "pt"))
 sagb_plt = sagb_plt + xlab("log(AGB) / Mg/ha") + ylab("log(Community Temporal Stability)")
 
 svg("../Results/plots/stability_overlap_agb.svg", width = 16, height = 9)
@@ -218,17 +242,20 @@ print(sagb_plt)
 dev.off()
 
 plt = ggplot(data = ovlp_v_stab, aes(x = overlap, y = stability))
-plt = plt + geom_point(aes(color = taxa, shape = taxa), size = 2)
+plt = plt + geom_point(aes(color = taxa, shape = taxa), size = p1)
 plt = plt + scale_color_brewer(palette = "Set2")
 plt = plt + theme_classic()
-plt = plt + theme(legend.title     = element_blank(),
-                  legend.position  = "bottom",
-                  axis.text        = element_text(size = 14),
-                  axis.title.x     = element_text(size = 16, margin = margin(t = 20, unit = "pt")),
-                  axis.title.y     = element_text(size = 16, margin = margin(r = 20, unit = "pt")),
-                  legend.text      = element_text(size = 14, margin = margin(r = 24, unit = "pt")))
-plt = plt + theme(legend.position = "bottom", legend.title = element_blank())
+plt = plt + theme(legend.title      = element_blank(),
+                  legend.position   = "bottom",
+                  axis.text         = element_text(size = s1, color = text_col),
+                  axis.title.x      = element_text(size = s2, margin = margin(t = m1, unit = "pt"), color = text_col),
+                  axis.title.y      = element_text(size = s2, margin = margin(r = m2, unit = "pt"), color = text_col),
+                  legend.text       = element_text(size = s1, margin = margin(r = m3, unit = "pt"), color = text_col),
+                  axis.line         = element_line(size = l2, color = text_col),
+                  axis.ticks        = element_line(size = l3, color = text_col),
+                  axis.ticks.length = unit(l4, "pt"))
+plt = plt + xlab("Hypervolume Overlap") + ylab("log(Community Temporal Stability)")
 
 svg("../Results/plots/correlation.svg", width = 16, height = 9)
-plt = plt + xlab("Hypervolume Overlap") + ylab("log(Community Temporal Stability)")
+print(plt)
 dev.off()
