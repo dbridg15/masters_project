@@ -1,7 +1,8 @@
 # Hypervolumes to Assess Ecosystem Stability 
 ![](pretty-gif.gif) 
-**Author:** David Bridgwood *dmb2417@ic.ac.uk*
 
+
+**Author:** David Bridgwood *dmb2417@ic.ac.uk*
 **Description:** code for masters project
 
 ## Dependencies
