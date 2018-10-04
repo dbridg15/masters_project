@@ -6,15 +6,17 @@
 
 # require
 cat("\n loading required packages\n\n")
-require(vegan)
-require(hypervolume)
-require(plyr)  # big dodgy that i need both...
-require(dplyr)
-require(codyn)
-require(reshape2)
+suppressPackageStartupMessages(require(vegan))
+suppressPackageStartupMessages(require(hypervolume))
+suppressPackageStartupMessages(require(plyr))        # bit dodgy that i need both...
+suppressPackageStartupMessages(require(dplyr))       # bit dodgy that i need both...
+suppressPackageStartupMessages(require(codyn))
+suppressPackageStartupMessages(require(reshape2))
+suppressPackageStartupMessages(require(RColorBrewer))
+suppressPackageStartupMessages(require(ggplot2))
 
 # TODO!
-# - would be nice if the hvs_rslts function could take any datframe not just
+# - would be nice if the hvs_rslts function could take any dataframe not just
 # the pca output.
 
 ###############################################################################
@@ -311,104 +313,112 @@ hvs_rslts <- function(df, axis, what = "seq", census_time, method = 'gaussian'){
 #' @param hv_rslts an object of class hvs.rslts
 #' @export
 #' @examples
-#' plot_hvs(df)
+#' plot_hvs(df, plt)
 
-plot_hvs <- function(hvs.rslts){
-
-  plts <- unique(hvs.rslts@compare$plot)
-
-  for (plt in plts){
+plot_hvs <- function(hvs.rslts, plt){
 
     match_plt <- which(unlist(strsplit(names(hvs.rslts@hvlist), "_"))[c(T, F)] == plt)
-    
+
     hvlist <- hvs.rslts@hvlist[match_plt]
     hvlist <- hvlist[which(!is.na(hvlist))]
     hvlist <- new("HypervolumeList", HVList = hvlist)
-    
-    plot(hvlist)
-  }
-}
 
-
-############################ overlap_time #####################################
-
-
-# this is DEFINATELY not the way to do this!
-overlap_time = function(df, cen){
-    
-    cen = cen[complete.cases(cen), ]
-    df$X = row.names(df)
-    df = merge(df, cen[ , c("X", "min", "max", "mid", "difference", "diff_yrs")], by = "X")
-    
-    df$overlap_time = df$overlap / df$diff_yrs
-    
-    return(df)
+    plot(hvlist,
+        #contour.lwd    = 1,
+        contour.type   = "kde",
+        #show.centroid = F,
+        #show.density = T,
+        #cex.centroid  = 2,
+        cex.random    = 0.3,
+        cex.centroid  = 2.5,
+        cex.data      = 1,
+        cex.axis      = 1,
+        point.dark.factor = 0.2,
+        colors = brewer.pal(max(c(length(match_plt), 3)), "Set2")
+        )
 }
 
 
 ########################### standardise_time ##################################
 
+#' returns points adjusted to position at standardise_time t=1year 
+#' 
+#' @param df a dataframe which is the axis of hypervolume as columns and plots/census as rows 
+#' @param axix a vector of axis that hypervolumes will be constructed from
+#' @param census_time data with time differences beteen censuses
+#' @export
+#' @examples
+#' standardise_time(df, axis, census_time)
+
 standardise_time = function(df, axis, census_time){
+  
+  # select required axis
+  df = df[, axis]
+
+  # get list of plots
+  plts = unique(unlist(strsplit(rownames(df), "_"))[c(T, F, F)])
+
+  if (exists('out')){ rm(out) }
+
+  for (plt in plts){
+  
+    tmp1 = df[which(unlist(strsplit(rownames(df), "_"))[c(T, F, F)] == plt), ]
+
+    splt = unique(unlist(strsplit(rownames(tmp1), "_"))[c(F, T, F)])
+    cens = sort(unique(unlist(strsplit(rownames(tmp1), "_"))[c(F, F, T)]))
+
+    raw = array(dim= c(length(splt), ncol(df), length(cens)),
+          dimnames = list(splt, axis, cens))
+
+    adj = raw
+
+    for (sp in splt){ for (cen in cens){
+      raw[sp, , cen] = unlist(tmp1[paste(plt, sp, cen, sep = "_"), ])
+    }}
+
+    adj[,,cens[1]] = raw[,,cens[1]]
     
-    # select the axis that I want
-    df = df[, axis]
+    if (length(cens) > 1){ 
+      for (c in 2:length(cens)){
 
-    plts = unique(unlist(strsplit(rownames(df), "_"))[c(T, F, F)])
+        mask = census_time$plot == plt & census_time$census == cens[c]
 
-    if (exists('out')){ rm(out) }
-        
-    for (plt in plts){
-    
-        tmp1 = df[which(unlist(strsplit(rownames(df), "_"))[c(T, F, F)] == plt), ]
+      if (sum(mask, na.rm = TRUE) == 0) {
+        adj[ , , cens[c]] = NA
+      } else {
+        diff_yrs = census_time[mask, "diff_yrs"]
+        adj[,,cens[c]] = raw[,,cens[c-1]] + ((raw[,,cens[c]] - raw[,,cens[c-1]])*(1/diff_yrs)) 
+      }}}
 
-        splt = unique(unlist(strsplit(rownames(tmp1), "_"))[c(F, T, F)])
-        cens = sort(unique(unlist(strsplit(rownames(tmp1), "_"))[c(F, F, T)]))
+    adj = adply(adj, c(1, 3))
 
-        raw = array(dim= c(length(splt), ncol(df), length(cens)),
-              dimnames = list(splt, axis, cens))
+    colnames(adj)[1:2] = c('subplot', 'census')
+    adj$plot      = plt
+    rownames(adj) = paste(adj$plot, adj$subplot, adj$census, sep = "_")
 
-        adj = raw
+    adj = adj[order(rownames(adj)), ]
 
-        for (sp in splt){ for (cen in cens){
-            raw[sp, , cen] = unlist(tmp1[paste(plt, sp, cen, sep = "_"), ])
-        }}
+    adj = na.omit(adj)
 
-        adj[,,cens[1]] = raw[,,cens[1]]
-        
-        if (length(cens) > 1){ 
-            for (c in 2:length(cens)){
-
-                mask = census_time$plot == plt & census_time$census == cens[c]
-
-            if (sum(mask, na.rm = TRUE) == 0) {
-                adj[ , , cens[c]] = NA
-            } else {
-                diff_yrs = census_time[mask, "diff_yrs"]
-                adj[,,cens[c]] = raw[,,cens[c-1]] + ((raw[,,cens[c]] - raw[,,cens[c-1]])*(1/diff_yrs)) 
-            }}}
-
-        adj = adply(adj, c(1, 3))
-
-        colnames(adj)[1:2] = c('subplot', 'census')
-        adj$plot      = plt
-        rownames(adj) = paste(adj$plot, adj$subplot, adj$census, sep = "_")
-
-        adj = adj[order(rownames(adj)), ]
-
-        adj = na.omit(adj)
-
-        if (exists('out')){
-            out = rbind(out, adj)
-        } else {
-            out = adj
-        }
+    if (exists('out')){
+      out = rbind(out, adj)
+    } else {
+      out = adj
     }
-    return(out)
+  }
+  return(out)
 }
 
 
 ############################### add_cols #####################################
 
+
+#' adds columns for plot, subplot and census  
+#' 
+#' @param df with rownames in form plot_subplot_census 
+#' @export
+#' @examples
+#' standardise_time(df)
 
 add_cols = function(df){
     df$plot    = unlist(strsplit(rownames(df), "_"))[ c(T,F,F)]
@@ -421,6 +431,12 @@ add_cols = function(df){
 
 ###########################  spatial_stability ################################
 
+#' calculate measure of spatial stabilitys (using Lehman and Tilman equation)  
+#' 
+#' @param df with plot, subplot, census, species, count as columns
+#' @export
+#' @examples
+#' spatial_stability(df)
 
 spatial_stability = function(df){
 
@@ -450,6 +466,12 @@ spatial_stability = function(df){
 
 ####################### temporal_stability ####################################
 
+#' calculate measure of temporal stability (using Lehman and Tilman equation)  
+#' 
+#' @param df with plot, subplot, census, species, count as columns
+#' @export
+#' @examples
+#' temporal_stability(df)
 
 temporal_stability = function(df){
 
@@ -473,4 +495,3 @@ temporal_stability = function(df){
 
     return(stability)
     }
-
