@@ -1,4 +1,4 @@
-# Hypervolumes to Assess Ecosystem Stability 
+# Using *N*-Dimensional Hypervolumes to Measure Ecosystem Stability 
 ![](pretty-gif.gif) 
 
 
