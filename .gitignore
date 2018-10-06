@@ -1,5 +1,4 @@
 *.pyc
-*.rda
 *.Rproj.user
 *.Rhistory
 *.RData
@@ -13,7 +12,4 @@
 *.out
 .ropeproject/*
 Code/.ropeproject/*
-*.pdf
-Results/*
-!Results/.gitkeep
 Code/.ipynb_checkpoints/*
