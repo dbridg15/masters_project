@@ -50,31 +50,6 @@ btles_hvs_p = hvs_rslts(btles_pca@axis, axis = c("PC1", "PC2", "PC3"), "seq", bt
 # plot the things!
 ###############################################################################
 
-# playing around to make the plots look pretty
-plot_hvs <- function(hvs.rslts, plt){
-
-    match_plt <- which(unlist(strsplit(names(hvs.rslts@hvlist), "_"))[c(T, F)] == plt)
-
-    hvlist <- hvs.rslts@hvlist[match_plt]
-    hvlist <- hvlist[which(!is.na(hvlist))]
-    hvlist <- new("HypervolumeList", HVList = hvlist)
-
-    plot(hvlist,
-        #contour.lwd    = 1,
-        contour.type   = "kde",
-        #show.centroid = F,
-        #show.density = T,
-        #cex.centroid  = 2,
-        cex.random    = 0.3,
-        cex.centroid  = 2.5,
-        cex.data      = 1,
-        cex.axis      = 1,
-        point.dark.factor = 0.2,
-        colors = brewer.pal(max(c(length(match_plt), 3)), "Set2")
-        )
-}
-
-
 pdf("../Thesis/Writing/figures/figure1a.pdf", width = 10, height = 10)
 plot_hvs(trees_hvs_p, "Belian")
 dev.off()
@@ -146,7 +121,6 @@ agb_plt = agb_plt + theme_classic()
 agb_plt = agb_plt + theme(legend.position="bottom", legend.title = element_blank())
 agb_plt = agb_plt + xlab("log(AGB) / Mg/ha") + ylab("Hypervolume Overlap")
 #print(agb_plt)
-
 
 
 ###############################################################################

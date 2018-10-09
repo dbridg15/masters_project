@@ -1,5 +1,5 @@
 # Using *N*-Dimensional Hypervolumes to Measure Ecosystem Stability 
-![](pretty-gif.gif) 
+![](pretty.gif) 
 
 
 **Author:** David Bridgwood *dmb2417@ic.ac.uk*
