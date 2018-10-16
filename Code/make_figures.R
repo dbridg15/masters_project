@@ -109,7 +109,7 @@ bx_plt = bx_plt + scale_color_brewer(palette = "Set2")
 bx_plt = bx_plt + theme_classic()
 bx_plt = bx_plt + theme(legend.position="none")
 bx_plt = bx_plt + xlab("Taxa") + ylab("Hypervolume Overlap")
-print(bx_plt)
+# print(bx_plt)
 
 
 # overlap by log(agb)

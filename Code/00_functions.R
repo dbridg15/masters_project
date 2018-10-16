@@ -231,10 +231,10 @@ hvs_rslts <- function(df, axis, what = "seq", census_time, method = 'gaussian'){
             paste0(axis, "_l"),
             paste0(axis, "_h"))
 
-	# empty list to store hypervolumes as they're built
+  # empty list to store hypervolumes as they're built
   hvlist <- list()
 
-	# construct df to store summary stats for each hv
+  # construct df to store summary stats for each hv
   rslts           <- data.frame(matrix(NA, nrow = length(names), ncol = length(cols)))
   colnames(rslts) <- cols
   rownames(rslts) <- names
@@ -253,7 +253,7 @@ hvs_rslts <- function(df, axis, what = "seq", census_time, method = 'gaussian'){
     p <- unlist(strsplit(i, "_"))[[1]]  # plot
     c <- unlist(strsplit(i, "_"))[[2]]  # census
 
-		# subset of the pca space with require plot/census and PCs
+    # subset of the pca space with require plot/census and PCs
     tmp <- subset(df,
                   plot == p & census == c,
                   select = colnames(df)[!(colnames(df) %in% c("plot", "subplot", "census"))])
